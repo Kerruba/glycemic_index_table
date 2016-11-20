@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+
+  mongo:
+    image: mongo
+    volumes:
+        - ~/tmp/mongo:/data
+        - ./data/db:/data/db
+        - ./data/configdb:/data/configdb
+    ports:
+        - "27017:27017"
+    container_name: mongo
+
+#    command: dump-config
+    
+    

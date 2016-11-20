@@ -1,0 +1,15 @@
+{
+
+	"assetsPath": "src/",
+
+    "publicPath": "client/assets/",
+
+    "css": {
+        "outputFolder": "css"
+    },
+
+    "js": {
+        "outputFolder": "js"
+    }
+
+}

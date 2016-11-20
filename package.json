@@ -1,0 +1,29 @@
+{
+  "name": "glycemic-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js && browser-sync start --proxy 'localhost:3000' --files 'client' &&  gulp watch"
+  },
+  "author": "kerruba",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.15.2",
+    "consolidate": "^0.14.1",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "laravel-elixir": "^6.0.0-11",
+    "mongodb": "^2.2.11",
+    "mustache": "^2.2.1",
+    "vue": "^2.0.3"
+  },
+  "devDependencies": {
+    "laravel-elixir-browsersync-official": "^1.0.0",
+    "laravel-elixir-rollup-official": "^1.1.0",
+    "laravel-elixir-vueify": "^2.0.0",
+    "laravel-elixir-webpack-official": "^1.0.8",
+    "rollup-plugin-replace": "^1.1.1"
+  }
+}
