@@ -7,7 +7,9 @@ Vue.prototype.$http = axios;
 new Vue({
     el: "#app",
     data: {
-        items: []
+        items: [],
+        page: 1,
+        size: 10
     },
     mounted: function () {
         this.$nextTick(function () {
