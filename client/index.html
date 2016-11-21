@@ -10,7 +10,12 @@
 <body>
 <div id="app">
     <h1>Glycemic Index table</h1>
-
+    <div>
+        <button @click="decrementPage"> - </button> Page: {{page}} <button @click="incrementPage"> + </button>
+    </div>
+    <div>
+       <button @click="decrementSize"> - </button> Size: {{size}} <button @click="incrementSize"> + </button>
+    </div>
     <table>
         <tr v-for="(item, index) in items">
             <td>{{item.name}}</td>

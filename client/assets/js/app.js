@@ -9300,7 +9300,9 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$http = __WEBPACK_IMPORTED
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: "#app",
     data: {
-        items: []
+        items: [],
+        page: 1,
+        size: 10
     },
     mounted: function () {
         this.$nextTick(function () {
@@ -9317,7 +9319,23 @@ new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                     "use strict";
                     this$1.items = response.data;
                 })
-        }
+        },
+        incrementSize: function incrementSize() {
+            "use strict";
+            this.size = this.size < 500 ? this.size + 10 : 500;
+        },
+        decrementSize: function decrementSize() {
+            "use strict";
+            this.size = this.size > 10 ? this.size + 10 : 10;
+        },
+        incrementPage: function incrementPage() {
+            "use strict";
+            this.page = this.page < 100 ? this.page + 1 : 100;
+        },
+        decrementPage: function decrementPage() {
+            "use strict";
+            this.page = this.page > 1 ? this.size - 1 : 1;
+        },
     }
 
 });
