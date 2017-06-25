@@ -23,6 +23,7 @@ new Vue({
                 .then(response => {
                     "use strict";
                     this.items = response.data;
+                    alert("Hello world")
                 })
         },
         incrementSize() {

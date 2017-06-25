@@ -169,7 +169,12 @@ module.exports.plugins.production = () => {
 
 module.exports.plugins.default = () => {
     return {
-        plugins: [plugins.hoisting]
+        plugins: [ plugins.hoisting ]
     };
 };
 
+module.exports.plugins.development = (options = {browserSync: {}}) => {
+    return {
+        plugins: [ plugins.browserSync(options.browserSync)]
+    };
+};

@@ -965,6 +965,7 @@ new _vue2.default({
                 "use strict";
 
                 _this.items = response.data;
+                alert("Hello world");
             });
         },
         incrementSize: function incrementSize() {
