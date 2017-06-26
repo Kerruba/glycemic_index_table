@@ -3,11 +3,12 @@ module.exports = {
         browser: true,
         es6: true,
         node: true,
-        commonjs: true
+        commonjs: true,
     },
     plugins: ["html"],
     globals: {
-        "jQuery": true
+        "Vue": true,
+        "axios": true
     },
     extends: 'eslint:recommended',
     rules: {
@@ -22,5 +23,8 @@ module.exports = {
         'indent': 'error',
         'no-var': 'error',
         'no-debugger': 0
+    },
+    parserOptions: {
+        "sourceType": "module"
     }
 };

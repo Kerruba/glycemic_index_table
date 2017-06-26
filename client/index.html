@@ -5,26 +5,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>GIT</title>
+    <title>Glycemic Load app</title>
 </head>
 <body>
 <div id="app">
-    <h1>Glycemic Index table</h1>
-    <div>
-        <button @click="decrementPage"> - </button> Page: {{page}} <button @click="incrementPage"> + </button>
-    </div>
-    <div>
-       <button @click="decrementSize"> - </button> Size: {{size}} <button @click="incrementSize"> + </button>
-    </div>
-    <table>
-        <tr v-for="(item, index) in items">
-            <td>{{item.name}}</td>
-            <td>{{item.glyc_index}}</td>
-            <td>{{item.serving_g}}</td>
-            <td>{{item.serv_carbs}}</td>
-            <td>{{item.glyc_load}}</td>
-        </tr>
-    </table>
+    <h1>Glycemic table</h1>
+    <p>
+        <router-link to="/">Home</router-link>
+        <router-link to="add">Add new aliment</router-link>
+    </p>
+
+    <router-view></router-view>
 </div>
 <script src="assets/js/app.js"></script>
 </body>

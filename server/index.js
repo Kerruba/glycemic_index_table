@@ -2,11 +2,13 @@
 const express = require('express');
 const path = require('path');
 const engines = require('consolidate');
+const bodyParser = require('body-parser');
+const dbUtils = require('./dbUtils.js');
 // const mongo = require('./mongoUtils.js');
 
 
 let [,,db_path = 'database.json'] = process.argv;
-const database = require('./dbUtils.js').loadDatabase(db_path);
+const database = dbUtils.loadDatabase(db_path);
 
 
 let app = express();
@@ -22,7 +24,14 @@ app.use( (req, res, next) => {
     next();
 });
 
+// Body content parsers
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
 app.get('/aliments', (req,res) => {
+    res.json(database);
+    /*
     // res.json(req.query)
     // res.json(req.query); 
     // let pag ={
@@ -44,7 +53,21 @@ app.get('/aliments', (req,res) => {
     //         }
     //         res.json(result);
     //     });
-    res.json(database);
+    */
+});
+
+app.post('/aliments', (req, res) => {
+    let food = {
+        name: req.body.food_name,
+        details: req.body.food_details,
+        gi: parseInt(req.body.food_gi),
+        carbs_perc: parseInt(req.body.food_carbs),
+        gl: parseInt(req.body.food_gl),
+        serving: `${req.body.food_serving} g`
+    };
+    database.push(food);
+    dbUtils.saveDatabase(database, db_path);
+    res.redirect('/index.html');
 });
 
 app.listen(3000, function() {

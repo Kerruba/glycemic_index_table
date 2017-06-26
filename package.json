@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch database.json server/index.js",
+    "webpack": "webpack --watch",
     "dev": "webpack --watch & npm run start"
   },
   "author": "kerruba",
@@ -31,6 +32,7 @@
     "style-loader": "^0.18.2",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^8.7.0",
+    "vue-router": "^2.6.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.3.4",
     "webpack": "^3.0.0",
@@ -39,6 +41,7 @@
   },
   "dependencies": {
     "axios": "^0.15.2",
+    "body-parser": "^1.17.2",
     "consolidate": "^0.14.1",
     "express": "^4.14.0",
     "foundation-sites": "^6.2.4",
