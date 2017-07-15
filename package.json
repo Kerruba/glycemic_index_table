@@ -42,8 +42,10 @@
   "dependencies": {
     "axios": "^0.15.2",
     "body-parser": "^1.17.2",
+    "chokidar": "^1.7.0",
     "consolidate": "^0.14.1",
     "express": "^4.14.0",
+    "express-validator": "^3.2.1",
     "foundation-sites": "^6.2.4",
     "mongodb": "^2.2.11",
     "mustache": "^2.2.1",

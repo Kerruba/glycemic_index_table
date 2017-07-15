@@ -4,6 +4,10 @@ let routes = [
     {
         path: '/',
         component: require('./views/Home.vue')
+    },
+    {
+        path: '/add',
+        component: require('./views/NewFood.vue')
     }
 ];
 

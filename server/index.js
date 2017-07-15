@@ -1,33 +1,36 @@
 'use strict';
+let chokidar = require('chokidar');
+let watcher = chokidar.watch('./app');
 const express = require('express');
 const path = require('path');
 const engines = require('consolidate');
 const bodyParser = require('body-parser');
 const dbUtils = require('./dbUtils.js');
+const app = require('./config.js');
+
 // const mongo = require('./mongoUtils.js');
+
+watcher.on('ready', function () {
+    watcher.on('all', function () {
+        console.log('Clearing /app/ module cache from server');
+        Object.keys(require.cache).forEach(function (id) {
+            if (/[/\\]server[/\\]/.test(id)) delete require.cache[id];
+        });
+    });
+});
 
 
 let [,,db_path = 'database.json'] = process.argv;
 const database = dbUtils.loadDatabase(db_path);
 
-
-let app = express();
-// mongo.connect();
-
-// Setup express to serve static content from client folder
-app.use( express.static(__dirname + '/../client') );
-
-// Setup CORS for localhost:3001
-app.use( (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
-
-// Body content parsers
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
+function validationConverter(validationResults) {
+    let converted = {};
+    for(let val of validationResults) {
+        converted[val.param] = [val.msg];
+    }
+    console.log(converted);
+    return converted;
+}
 
 app.get('/aliments', (req,res) => {
     res.json(database);
@@ -57,17 +60,30 @@ app.get('/aliments', (req,res) => {
 });
 
 app.post('/aliments', (req, res) => {
-    let food = {
-        name: req.body.food_name,
-        details: req.body.food_details,
-        gi: parseInt(req.body.food_gi),
-        carbs_perc: parseInt(req.body.food_carbs),
-        gl: parseInt(req.body.food_gl),
-        serving: `${req.body.food_serving} g`
-    };
-    database.push(food);
-    dbUtils.saveDatabase(database, db_path);
-    res.redirect('/index.html');
+    //Validation
+    req.checkBody('name','A name is required').notEmpty();
+    req.checkBody('glycemic_index','Glycemic index must be a number').isInt();
+    req.checkBody('glycemic_load','Glycemic load must be a number').isInt();
+    req.checkBody('carbs','Carbs percentage must be a number').isInt();
+    req.checkBody('serving','The serving size is required').notEmpty();
+
+    req.getValidationResult().then(errors => {
+        if (!errors.isEmpty()) {
+            res.status(400).json(validationConverter(errors.array()));
+            return;
+        }
+        let food = {
+            name: req.body.name,
+            details: req.body.details,
+            gi: parseInt(req.body.glycemic_index),
+            carbs_perc: parseInt(req.body.carbs),
+            gl: parseInt(req.body.glycemic_load),
+            serving: `${req.body.serving}`
+        };
+        database.push(food);
+        dbUtils.saveDatabase(database, db_path);
+        res.redirect('/index.html');
+    });
 });
 
 app.listen(3000, function() {

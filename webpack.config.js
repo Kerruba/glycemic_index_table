@@ -3,10 +3,11 @@ const merge   = require('webpack-merge');
 const path    = require('path');
 const srcRoot = './src/';
 const distRoot = './client/assets/';
-const BrowserSync = require('browser-sync-webpack-plugin');
 
 const ENTRIES = {
-    entry: path.resolve(__dirname, srcRoot, 'js', 'app.js'),
+    entry: {
+        'js/app.js': path.resolve(__dirname, srcRoot, 'js', 'app.js'),
+    },
     output: {
         filename: '[name]',
         path: path.resolve(__dirname, distRoot)
@@ -29,10 +30,20 @@ const PLUGINS = merge(
     })
 );
 
+const RESOLVE = merge({
+    resolve: {
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js' // 'vue/dist/vue.common.js' for webpack 1
+        }
+    }
+});
+
 const CONFIGURATION = merge(
     ENTRIES,
     LOADERS,
-    PLUGINS
+    PLUGINS,
+    RESOLVE
 );
+
 
 module.exports = CONFIGURATION;

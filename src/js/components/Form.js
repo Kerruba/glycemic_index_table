@@ -142,3 +142,6 @@ class Form {
         this.errors.record(errors);
     }
 }
+
+module.exports.Form = Form;
+module.exports.Errors = Errors;
