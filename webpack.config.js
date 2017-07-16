@@ -21,6 +21,7 @@ const LOADERS = merge(
     parts.scss()
 );
 
+// Working just in development at the moment
 const PLUGINS = merge(
     parts.plugins.default(),
     parts.plugins.development({

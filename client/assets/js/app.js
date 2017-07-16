@@ -14143,6 +14143,14 @@ exports.default = {
             }).catch(function (error) {
                 console.log(error);
             });
+        },
+        delete_aliment: function delete_aliment(index) {
+            var vm = this;
+            axios.delete('/aliments/' + index).then(function (response) {
+                vm.aliments = response.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 };
@@ -14151,7 +14159,7 @@ exports.default = {
 /* 34 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div id=\"foods\">\n    <div v-for=\"food in aliments\" class=\"columns is-gapless\">\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>\n</div>\n";
+module.exports = "\n<div id=\"foods\">\n    <div v-for=\"(food,index) in aliments\" class=\"columns is-gapless\">\n            <div class=\"column is-1\">\n                <button class=\"button is-danger is-outlined\" @click=\"delete_aliment(index)\">Delete</button>\n            </div>\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>\n</div>\n";
 
 /***/ }),
 /* 35 */
@@ -14217,9 +14225,7 @@ exports.default = {
 
 	methods: {
 		onSubmit: function onSubmit() {
-			this.form.post('/aliments').then(function (response) {
-				return alert('Done!');
-			});
+			this.form.post('/aliments').then(this.$router.push('/'));
 		}
 	}
 };

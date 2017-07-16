@@ -1,23 +1,23 @@
 'use strict';
-let chokidar = require('chokidar');
-let watcher = chokidar.watch('./app');
-const express = require('express');
+// let chokidar = require('chokidar');
+// let watcher = chokidar.watch('./');
+// const express = require('express');
 const path = require('path');
 const engines = require('consolidate');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const dbUtils = require('./dbUtils.js');
 const app = require('./config.js');
 
 // const mongo = require('./mongoUtils.js');
 
-watcher.on('ready', function () {
-    watcher.on('all', function () {
-        console.log('Clearing /app/ module cache from server');
-        Object.keys(require.cache).forEach(function (id) {
-            if (/[/\\]server[/\\]/.test(id)) delete require.cache[id];
-        });
-    });
-});
+// watcher.on('ready', function () {
+//     watcher.on('all', function () {
+//         console.log('Clearing /app/ module cache from server');
+//         Object.keys(require.cache).forEach(function (id) {
+//             if (/[/\\]server[/\\]/.test(id)) delete require.cache[id];
+//         });
+//     });
+// });
 
 
 let [,,db_path = 'database.json'] = process.argv;
@@ -84,6 +84,27 @@ app.post('/aliments', (req, res) => {
         dbUtils.saveDatabase(database, db_path);
         res.redirect('/index.html');
     });
+});
+
+app.delete('/aliments/:foodId', (req, res) => {
+    console.log(req.params);
+    req.checkParams('foodId', 'Food id must be a number').isInt();
+
+    req.getValidationResult()
+        .then(results => {
+            if (!results.isEmpty()) {
+                res.status(400).json(validationConverter(results.array()));
+                return;
+            }
+            let foodId = parseInt(req.params.foodId);
+            if (foodId > database.length) {
+                res.status(400).send('The provided ID is not present in the database');
+                return;
+            }
+            database.splice(foodId,1);
+            dbUtils.saveDatabase(database, db_path);
+            res.json(database);
+        });
 });
 
 app.listen(3000, function() {

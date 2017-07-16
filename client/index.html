@@ -17,6 +17,17 @@
         .logo {
             background-color: #6DEECA;
             font-weight: bold;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        .logo a {
+            color: #657;
+        }
+        .logo a:hover {
+            color: #333;
+        }
+        .main {
+            padding: 10px;
         }
     </style>
 </head>
@@ -25,18 +36,20 @@
     <nav class="navbar">
         <div class="navbar-brand">
             <div class="navbar-item logo">
-                <h1>Glycemic Load table</b></h1>
+                <router-link to="/">Glycemic Load table</router-link>
             </div>
             <div class="navbar-item">
-                <router-link to="/" class="navbar-item">Home</router-link>
+                <router-link to="/">Home</router-link>
             </div>
             <div class="navbar-item">
-                <router-link to="/add" class="navbar-item">Add new aliment</router-link>
+                <router-link to="/add" class="button is-primary">Add new aliment</router-link>
             </div>
         </div>
     </nav>
 
-    <router-view></router-view>
+    <div class="main">
+        <router-view></router-view>
+    </div>
 </div>
 <script src="assets/js/app.js"></script>
 </body>

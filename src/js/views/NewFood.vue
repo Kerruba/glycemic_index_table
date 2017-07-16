@@ -69,7 +69,7 @@
 		methods: {
 			onSubmit() {
 				this.form.post('/aliments')
-					.then(response => alert('Done!'))
+                    .then(this.$router.push('/'))
 			}
 		}
 	}
