@@ -82,7 +82,8 @@ app.post('/aliments', (req, res) => {
         };
         database.push(food);
         dbUtils.saveDatabase(database, db_path);
-        res.redirect('/index.html');
+        res.json(database);
+        // res.redirect('/index.html');
     });
 });
 

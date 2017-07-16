@@ -69,13 +69,15 @@
 		data() {
 			return {
                 form: new Form(default_form),
-                multi_create: false
+                multi_create: false,
+                shared: store
 			}
 		},
 		methods: {
 			onSubmit() {
 				this.form.post('/aliments')
-                    .then(() => {
+                    .then((response) => {
+                        store.setAlimentsAction(response.data);
                         if (!this.multi_create) {
                             this.$router.push('/')
                         } else {

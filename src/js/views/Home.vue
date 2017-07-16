@@ -42,11 +42,11 @@ export default {
             shared: store.state
         }
     },
-    mounted() { 
-        this.$nextTick(() => {
-            this.get_aliments();
-        })
-    },
+    // mounted() { 
+    //     this.$nextTick(() => {
+    //         this.get_aliments();
+    //     })
+    // },
     methods: {
         get_aliments() {
             axios.get('/aliments')
