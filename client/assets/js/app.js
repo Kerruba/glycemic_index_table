@@ -3457,7 +3457,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 new Vue({
     el: '#app',
-    router: _router2.default
+    router: _router2.default,
+    mounted: function mounted() {
+        var _this = this;
+
+        this.$nextTick(function () {
+            _this.get_aliments();
+        });
+    },
+
+    methods: {
+        get_aliments: function get_aliments() {
+            axios.get('/aliments').then(function (response) {
+                store.setAlimentsAction(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    }
 });
 
 /***/ }),
@@ -14192,7 +14209,7 @@ exports.default = {
 /* 35 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div id=\"foods\">\n    <div v-for=\"(food,index) in shared.aliments\" class=\"columns is-gapless\">\n            <div class=\"column is-1\">\n                <button class=\"button is-danger is-outlined\" @click=\"delete_aliment(index)\">Delete</button>\n            </div>\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>\n</div>\n";
+module.exports = "\n<div id=\"foods\">\n     <table class=\"table is-striped\">\n        <thead>\n            <tr>\n                <th></th>\n                <th>Food</th>\n                <th>Glycemic index</th>\n                <th>Glycemic load</th>\n                <th>Carbs (%)</th>\n                <th>Serving</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for=\"(food,index) in shared.aliments\">\n                <th style=\"width: 10px\"><button class=\"button is-danger\" @click=\"delete_aliment(index)\">X</button></th>\n                <td v-text=\"food.name\"></td> \n                <td v-text=\"food.gi\"></td> \n                <td v-text=\"food.gl\"></td> \n                <td v-text=\"food.carbs_perc\"></td> \n                <td v-text=\"food.serving\"></td>\n            </tr>\n        </tbody>\n    </table> \n     <!-- <div v-for=\"(food, index) in shared.aliments\" class=\"columns\">\n            <div class=\"column is-1\">\n            </div>\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>  -->\n</div>\n";
 
 /***/ }),
 /* 36 */
@@ -14252,13 +14269,22 @@ var default_form = {
 exports.default = {
 	data: function data() {
 		return {
-			form: new _Form.Form(default_form)
+			form: new _Form.Form(default_form),
+			multi_create: false
 		};
 	},
 
 	methods: {
 		onSubmit: function onSubmit() {
-			this.form.post('/aliments').then(this.$router.push('/'));
+			var _this = this;
+
+			this.form.post('/aliments').then(function () {
+				if (!_this.multi_create) {
+					_this.$router.push('/');
+				} else {
+					_this.form = new _Form.Form(default_form);
+				}
+			});
 		}
 	}
 };
@@ -14468,7 +14494,7 @@ module.exports.Errors = Errors;
 /* 39 */
 /***/ (function(module, exports) {
 
-module.exports = "\n\t<form method=\"POST\" action=\"/aliments\" @submit.prevent=\"onSubmit\" @keydown=\"form.errors.clear($event.target.name)\">\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"name\">Name</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" name=\"name\" id=\"name\" v-model=\"form.name\">\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('name')\" v-text=\"form.errors.get('name')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"details\">Details</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"details\" name=\"details\" v-model=\"form.details\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('details')\" v-text=\"form.errors.get('details')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_index\">Glycemic index</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_index\" name=\"glycemic_index\" v-model=\"form.glycemic_index\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_index')\" v-text=\"form.errors.get('glycemic_index')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"carbs\">Carbs (%)</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"carbs\" name=\"carbs\" v-model=\"form.carbs\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('carbs')\" v-text=\"form.errors.get('carbs')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_load\">Glycemic load</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_load\" name=\"glycemic_load\" v-model=\"form.glycemic_load\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_load')\" v-text=\"form.errors.get('glycemic_load')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"serving\">Serving</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"serving\" name=\"serving\" v-model=\"form.serving\" />\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('serving')\" v-text=\"form.errors.get('serving')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n            <button class=\"button is-primary\" :disabled=\"form.errors.any()\">Create</button>\n\t\t</div>\n\t\t\n\t</form>\n";
+module.exports = "\n\t<form method=\"POST\" action=\"/aliments\" @submit.prevent=\"onSubmit\" @keydown=\"form.errors.clear($event.target.name)\">\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"name\">Name</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" name=\"name\" id=\"name\" v-model=\"form.name\" placeholder=\"Food name\">\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('name')\" v-text=\"form.errors.get('name')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"details\">Details</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"details\" name=\"details\" v-model=\"form.details\" placeholder=\"Details about the food\"/> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('details')\" v-text=\"form.errors.get('details')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_index\">Glycemic index</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_index\" name=\"glycemic_index\" v-model=\"form.glycemic_index\" placeholder=\"Glycemic index of the food\"/> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_index')\" v-text=\"form.errors.get('glycemic_index')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"carbs\">Carbs (%)</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"carbs\" name=\"carbs\" v-model=\"form.carbs\" placeholder=\"Percentage of carbs for serving\"/> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('carbs')\" v-text=\"form.errors.get('carbs')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_load\">Glycemic load</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_load\" name=\"glycemic_load\" v-model=\"form.glycemic_load\" placeholder=\"Glycemic load of the food\"/> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_load')\" v-text=\"form.errors.get('glycemic_load')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"serving\">Serving</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"serving\" name=\"serving\" v-model=\"form.serving\" placeholder=\"Serving size\"/>\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('serving')\" v-text=\"form.errors.get('serving')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n            <button class=\"button is-primary\" :disabled=\"form.errors.any()\">Create</button>\n            <span class=\"control\">\n                <label class=\"checkbox\">\n                    <input type=\"checkbox\" v-model=\"multi_create\"> Create another\n                </label>\n            </span>\n\t\t</div>\n\t\t\n\t</form>\n";
 
 /***/ }),
 /* 40 */
@@ -14516,8 +14542,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
     data: function data() {
         return {
-            shared: store.state
+            shared: store.state,
+            selected: {}
         };
+    },
+
+    computed: {
+        foodDetails: function foodDetails() {
+            return this.selected.details && this.selected.details != "";
+        }
     }
 };
 
@@ -14525,7 +14558,7 @@ exports.default = {
 /* 42 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"columns\">\n    <div class=\"column panel\">\n        <p class=\"panel-heading\">Food list</p>\n        <div class=\"panel-block\">\n            <p class=\"control has-icons-left\">\n            <input class=\"input is-small\" type=\"text\" placeholder=\"Search\">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fa fa-search\"></i>\n            </span>\n            </p>\n        </div>\n        <a v-for=\"food in shared.aliments\" class=\"panel-block\" v-text=\"food.name\">\n        </a>\n        <!-- <div class=\"field\">\n            <label class=\"label\" for=\"search\">Search</label>\n            <p class=\"control\">\n                <input class=\"input\" type=\"text\" id=\"search\" name=\"search\" />\n            </p>\n        </div> -->\n        \n        <!-- Food list -->\n    </div>\n    <div class=\"column\">\n        <!-- Food details -->\n    </div>\n    <div class=\"column\">\n        <!-- Serving -->\n        <!-- Add button -->\n    </div>\n    <div class=\"column\">\n        <!-- Food diary -->\n        <!-- Submit -->\n    </div>\n</div>\n";
+module.exports = "\n<div class=\"columns\">\n    <div class=\"column panel\">\n        <p class=\"panel-heading\">Food list</p>\n        <div class=\"panel-block\">\n            <p class=\"control has-icons-left\">\n                <input class=\"input is-small\" type=\"text\" placeholder=\"Search\">\n                <span class=\"icon is-small is-left\">\n                    <i class=\"fa fa-search\"></i>\n                </span>\n            </p>\n        </div>\n        <a v-for=\"food in shared.aliments\" class=\"panel-block\" v-text=\"food.name\" @click=\"selected = food\">\n        </a>\n        <!-- <div class=\"field\">\n                <label class=\"label\" for=\"search\">Search</label>\n                <p class=\"control\">\n                    <input class=\"input\" type=\"text\" id=\"search\" name=\"search\" />\n                </p>\n            </div> -->\n\n        <!-- Food list -->\n    </div>\n    <div class=\"column\" v-if=\"foodDetails\">\n        <div class=\"card\">\n            <header class=\"card-header\">\n                <p class=\"card-header-title\">\n                    Food details\n                </p>\n                <a class=\"card-header-icon\">\n                    <span class=\"icon\">\n                        <i class=\"fa fa-angle-down\"></i>\n                    </span>\n                </a>\n            </header>\n            <div class=\"card-content\">\n                <p class=\"content\" v-text=\"selected.details\">\n\n                </p>\n            </div>\n        </div>\n    </div>\n\n    <div class=\"column\">\n        <!-- Serving -->\n        <!-- Add button -->\n    </div>\n    <div class=\"column\">\n        <!-- Food diary -->\n        <!-- Submit -->\n    </div>\n</div>\n";
 
 /***/ })
 /******/ ]);

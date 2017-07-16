@@ -1,8 +1,29 @@
 <template>
     <div id="foods">
-        <div v-for="(food,index) in shared.aliments" class="columns is-gapless">
+         <table class="table is-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Food</th>
+                    <th>Glycemic index</th>
+                    <th>Glycemic load</th>
+                    <th>Carbs (%)</th>
+                    <th>Serving</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(food,index) in shared.aliments">
+                    <th style="width: 10px"><button class="button is-danger" @click="delete_aliment(index)">X</button></th>
+                    <td v-text="food.name"></td> 
+                    <td v-text="food.gi"></td> 
+                    <td v-text="food.gl"></td> 
+                    <td v-text="food.carbs_perc"></td> 
+                    <td v-text="food.serving"></td>
+                </tr>
+            </tbody>
+        </table> 
+         <!-- <div v-for="(food, index) in shared.aliments" class="columns">
                 <div class="column is-1">
-                    <button class="button is-danger is-outlined" @click="delete_aliment(index)">Delete</button>
                 </div>
                 <h3 class="column is-3">{{food.name}}</h3>
                 <ul class="column">
@@ -10,7 +31,7 @@
                     <li>{{food.serving}}</li>
                     <li>{{food.gl}}</li>
                 </ul>
-        </div>
+        </div>  -->
     </div>
 </template>
 
