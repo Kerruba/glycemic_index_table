@@ -1,6 +1,6 @@
 <template>
     <div id="foods">
-        <div v-for="(food,index) in aliments" class="columns is-gapless">
+        <div v-for="(food,index) in shared.aliments" class="columns is-gapless">
                 <div class="column is-1">
                     <button class="button is-danger is-outlined" @click="delete_aliment(index)">Delete</button>
                 </div>
@@ -18,7 +18,7 @@
 export default {
     data() {
         return {
-            aliments: [ ]
+            shared: store.state
         }
     },
     mounted() { 
@@ -28,10 +28,9 @@ export default {
     },
     methods: {
         get_aliments() {
-            let vm = this;
             axios.get('/aliments')
                 .then(function (response) {
-                    vm.aliments = response.data;
+                    store.setAlimentsAction(response.data);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -39,10 +38,9 @@ export default {
 
         },
         delete_aliment(index) {
-            let vm = this;
             axios.delete(`/aliments/${index}`)
                 .then(function (response) {
-                    vm.aliments = response.data;
+                    store.setAlimentsAction(response.data);
                 })
                 .catch(function (error) {
                     console.log(error);

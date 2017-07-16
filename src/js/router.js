@@ -8,6 +8,10 @@ let routes = [
     {
         path: '/add',
         component: require('./views/NewFood.vue')
+    },
+    {
+        path: '/diary_entry',
+        component: require('./views/DiaryEntry.vue')
     }
 ];
 

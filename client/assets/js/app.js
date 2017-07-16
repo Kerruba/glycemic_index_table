@@ -3449,7 +3449,7 @@ module.exports = Cancel;
 
 __webpack_require__(11);
 
-var _router = __webpack_require__(31);
+var _router = __webpack_require__(32);
 
 var _router2 = _interopRequireDefault(_router);
 
@@ -3479,11 +3479,16 @@ var _axios = __webpack_require__(4);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _store = __webpack_require__(31);
+
+var _store2 = _interopRequireDefault(_store);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 window.Vue = _vue2.default;
 _vue2.default.use(_vueRouter2.default);
 window.axios = _axios2.default;
+window.store = _store2.default;
 
 window.axios.defaults.headers.common = {
     'X-Request-with': 'XMLHttpRequest'
@@ -14059,6 +14064,33 @@ module.exports = function spread(callback) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+var store = {
+    debug: true,
+    state: {
+        aliments: []
+    },
+    setAlimentsAction: function setAlimentsAction(newValue) {
+        if (this.debug) console.log('setAlimentsAction triggered with', newValue);
+        this.state.aliments = newValue;
+    },
+    clearAlimentsAction: function clearAlimentsAction() {
+        if (this.debug) console.log('clearAlimentsAction triggered');
+        this.state.aliments = [];
+    }
+};
+
+exports.default = store;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _vueRouter = __webpack_require__(3);
 
@@ -14068,10 +14100,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var routes = [{
     path: '/',
-    component: __webpack_require__(32)
+    component: __webpack_require__(33)
 }, {
     path: '/add',
-    component: __webpack_require__(35)
+    component: __webpack_require__(36)
+}, {
+    path: '/diary_entry',
+    component: __webpack_require__(40)
 }];
 
 exports.default = new _vueRouter2.default({
@@ -14079,15 +14114,15 @@ exports.default = new _vueRouter2.default({
 });
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __vue_script__, __vue_template__
 var __vue_styles__ = {}
-__vue_script__ = __webpack_require__(33)
+__vue_script__ = __webpack_require__(34)
 if (Object.keys(__vue_script__).some(function (key) { return key !== "default" && key !== "__esModule" })) {
   console.warn("[vue-loader] src/js/views/Home.vue: named exports in *.vue files are ignored.")}
-__vue_template__ = __webpack_require__(34)
+__vue_template__ = __webpack_require__(35)
 module.exports = __vue_script__ || {}
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
@@ -14112,7 +14147,7 @@ if (false) {(function () {  module.hot.accept()
 })()}
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14124,7 +14159,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
     data: function data() {
         return {
-            aliments: []
+            shared: store.state
         };
     },
     mounted: function mounted() {
@@ -14137,17 +14172,15 @@ exports.default = {
 
     methods: {
         get_aliments: function get_aliments() {
-            var vm = this;
             axios.get('/aliments').then(function (response) {
-                vm.aliments = response.data;
+                store.setAlimentsAction(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
         },
         delete_aliment: function delete_aliment(index) {
-            var vm = this;
             axios.delete('/aliments/' + index).then(function (response) {
-                vm.aliments = response.data;
+                store.setAlimentsAction(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -14156,21 +14189,21 @@ exports.default = {
 };
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div id=\"foods\">\n    <div v-for=\"(food,index) in aliments\" class=\"columns is-gapless\">\n            <div class=\"column is-1\">\n                <button class=\"button is-danger is-outlined\" @click=\"delete_aliment(index)\">Delete</button>\n            </div>\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>\n</div>\n";
+module.exports = "\n<div id=\"foods\">\n    <div v-for=\"(food,index) in shared.aliments\" class=\"columns is-gapless\">\n            <div class=\"column is-1\">\n                <button class=\"button is-danger is-outlined\" @click=\"delete_aliment(index)\">Delete</button>\n            </div>\n            <h3 class=\"column is-3\">{{food.name}}</h3>\n            <ul class=\"column\">\n                <li v-if=\"food.details\">{{food.details}}</li>\n                <li>{{food.serving}}</li>\n                <li>{{food.gl}}</li>\n            </ul>\n    </div>\n</div>\n";
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __vue_script__, __vue_template__
 var __vue_styles__ = {}
-__vue_script__ = __webpack_require__(36)
+__vue_script__ = __webpack_require__(37)
 if (Object.keys(__vue_script__).some(function (key) { return key !== "default" && key !== "__esModule" })) {
   console.warn("[vue-loader] src/js/views/NewFood.vue: named exports in *.vue files are ignored.")}
-__vue_template__ = __webpack_require__(38)
+__vue_template__ = __webpack_require__(39)
 module.exports = __vue_script__ || {}
 if (module.exports.__esModule) module.exports = module.exports.default
 var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
@@ -14195,7 +14228,7 @@ if (false) {(function () {  module.hot.accept()
 })()}
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14205,7 +14238,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _Form = __webpack_require__(37);
+var _Form = __webpack_require__(38);
 
 var default_form = {
 	name: '',
@@ -14231,7 +14264,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14432,10 +14465,67 @@ module.exports.Form = Form;
 module.exports.Errors = Errors;
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = "\n\t<form method=\"POST\" action=\"/aliments\" @submit.prevent=\"onSubmit\" @keydown=\"form.errors.clear($event.target.name)\">\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"name\">Name</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" name=\"name\" id=\"name\" v-model=\"form.name\">\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('name')\" v-text=\"form.errors.get('name')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"details\">Details</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"details\" name=\"details\" v-model=\"form.details\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('details')\" v-text=\"form.errors.get('details')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_index\">Glycemic index</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_index\" name=\"glycemic_index\" v-model=\"form.glycemic_index\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_index')\" v-text=\"form.errors.get('glycemic_index')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"carbs\">Carbs (%)</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"carbs\" name=\"carbs\" v-model=\"form.carbs\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('carbs')\" v-text=\"form.errors.get('carbs')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"glycemic_load\">Glycemic load</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"glycemic_load\" name=\"glycemic_load\" v-model=\"form.glycemic_load\" /> \n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('glycemic_load')\" v-text=\"form.errors.get('glycemic_load')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n\t\t\t<label class=\"label\" for=\"serving\">Serving</label>\n\t\t\t<p class=\"control\">\n\t\t\t\t<input class=\"input\" type=\"text\" id=\"serving\" name=\"serving\" v-model=\"form.serving\" />\n\t\t\t</p>\n\t\t\t<span class=\"help is-danger\" v-if=\"form.errors.has('serving')\" v-text=\"form.errors.get('serving')\"></span>\n\t\t</div>\n\t\t<div class=\"field\">\n            <button class=\"button is-primary\" :disabled=\"form.errors.any()\">Create</button>\n\t\t</div>\n\t\t\n\t</form>\n";
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __vue_script__, __vue_template__
+var __vue_styles__ = {}
+__vue_script__ = __webpack_require__(41)
+if (Object.keys(__vue_script__).some(function (key) { return key !== "default" && key !== "__esModule" })) {
+  console.warn("[vue-loader] src/js/views/DiaryEntry.vue: named exports in *.vue files are ignored.")}
+__vue_template__ = __webpack_require__(42)
+module.exports = __vue_script__ || {}
+if (module.exports.__esModule) module.exports = module.exports.default
+var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
+if (__vue_template__) {
+__vue_options__.template = __vue_template__
+}
+if (!__vue_options__.computed) __vue_options__.computed = {}
+Object.keys(__vue_styles__).forEach(function (key) {
+var module = __vue_styles__[key]
+__vue_options__.computed[key] = function () { return module }
+})
+if (false) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  var id = "_v-53afd99b/DiaryEntry.vue"
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, __vue_template__)
+  }
+})()}
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            shared: store.state
+        };
+    }
+};
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+module.exports = "\n<div class=\"columns\">\n    <div class=\"column panel\">\n        <p class=\"panel-heading\">Food list</p>\n        <div class=\"panel-block\">\n            <p class=\"control has-icons-left\">\n            <input class=\"input is-small\" type=\"text\" placeholder=\"Search\">\n            <span class=\"icon is-small is-left\">\n                <i class=\"fa fa-search\"></i>\n            </span>\n            </p>\n        </div>\n        <a v-for=\"food in shared.aliments\" class=\"panel-block\" v-text=\"food.name\">\n        </a>\n        <!-- <div class=\"field\">\n            <label class=\"label\" for=\"search\">Search</label>\n            <p class=\"control\">\n                <input class=\"input\" type=\"text\" id=\"search\" name=\"search\" />\n            </p>\n        </div> -->\n        \n        <!-- Food list -->\n    </div>\n    <div class=\"column\">\n        <!-- Food details -->\n    </div>\n    <div class=\"column\">\n        <!-- Serving -->\n        <!-- Add button -->\n    </div>\n    <div class=\"column\">\n        <!-- Food diary -->\n        <!-- Submit -->\n    </div>\n</div>\n";
 
 /***/ })
 /******/ ]);
