@@ -38,7 +38,7 @@
 		<div class="field">
 			<label class="label" for="serving">Serving</label>
 			<p class="control">
-				<input class="input" type="text" id="serving" name="serving" :value="form.serving" @blur="setServingSize($event.target.value)" placeholder="Serving size"/>
+				<input class="input" type="text" id="serving" name="serving" v-model="form.serving" placeholder="Serving size"/>
 			</p>
 			<span class="help is-danger" v-if="form.errors.has('serving')" v-text="form.errors.get('serving')"></span>
 		</div>
@@ -86,10 +86,6 @@
                             this.form = new Form(default_form)
                         }
                     });
-			},
-			setServingSize(newValue, event) {
-					console.log(event)
-					this.form.serving = new Qty(newValue);
 			}
 		}
 	}

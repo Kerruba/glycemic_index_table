@@ -8,7 +8,6 @@ let store = {
     },
     setAlimentsAction (newValue) {
         if (this.debug) console.log('setAlimentsAction triggered with', newValue);
-        debugger;
         let newAliments = newValue.map(aliment => {
             let temp = cloneDeep(aliment);
             temp.serving = new Qty(aliment.serving);
