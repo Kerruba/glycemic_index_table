@@ -3,3 +3,6 @@ data
 database.json
 .vscode
 client/assets
+.gitignoew
+dbConvertion.js
+newDatabase.json
