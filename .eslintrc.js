@@ -9,7 +9,9 @@ module.exports = {
     globals: {
         "Vue": true,
         "axios": true,
-        "store": true
+        "store": true,
+        "food_database": true,
+        "meal_database": true
     },
     extends: 'eslint:recommended',
     rules: {
