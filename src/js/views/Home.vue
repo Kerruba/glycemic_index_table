@@ -18,7 +18,7 @@
                     <td v-text="food.gi"></td> 
                     <td v-text="food.gl"></td> 
                     <td v-text="food.carbs_perc"></td> 
-                    <td v-text="food.serving"></td>
+                    <td v-text="food.serving.toString()"></td>
                 </tr>
             </tbody>
         </table> 
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+let Qty = require('js-quantities');
+    
 export default {
     data() {
         return {
@@ -66,6 +68,9 @@ export default {
                 .catch(function (error) {
                     console.log(error);
                 })
+        },
+        getFoodServing(food) {
+            return food.serving.toString();
         }
     }
 }

@@ -7,6 +7,7 @@ const engines = require('consolidate');
 // const bodyParser = require('body-parser');
 const dbUtils = require('./dbUtils.js');
 const app = require('./config.js');
+const Qty = require('js-quantities');
 
 // const mongo = require('./mongoUtils.js');
 
@@ -66,6 +67,8 @@ app.post('/aliments', (req, res) => {
     req.checkBody('glycemic_load','Glycemic load must be a number').isInt();
     req.checkBody('carbs','Carbs percentage must be a number').isInt();
     req.checkBody('serving','The serving size is required').notEmpty();
+    req.checkBody('serving.amount').isInt();
+    req.checkBody('serving.unit', 'Serving must have a unit').notEmpty().isAlpha();
 
     req.getValidationResult().then(errors => {
         if (!errors.isEmpty()) {
@@ -78,7 +81,7 @@ app.post('/aliments', (req, res) => {
             gi: parseInt(req.body.glycemic_index),
             carbs_perc: parseInt(req.body.carbs),
             gl: parseInt(req.body.glycemic_load),
-            serving: `${req.body.serving}`
+            serving: new Qty(`${req.body.serving}`)
         };
         database.push(food);
         dbUtils.saveDatabase(database, db_path);

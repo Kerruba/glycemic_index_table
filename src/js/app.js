@@ -5,7 +5,7 @@ import router from './router';
 new Vue({
     el: '#app',
     router: router,
-    mounted() { 
+    mounted() {
         this.$nextTick(() => {
             this.get_aliments();
         });

@@ -38,8 +38,9 @@
 		<div class="field">
 			<label class="label" for="serving">Serving</label>
 			<p class="control">
-				<input class="input" type="text" id="serving" name="serving" v-model="form.serving" placeholder="Serving size"/>
+				<input class="input" type="text" id="serving" name="serving" :value="servingSize" @blur="setServingSize($event.target.value)" placeholder="Serving size"/>
 			</p>
+			<!-- TODO I need to solve the problem with separated unit and amount freezing this input -->
 			<span class="help is-danger" v-if="form.errors.has('serving')" v-text="form.errors.get('serving')"></span>
 		</div>
 		<div class="field">
@@ -62,7 +63,10 @@
 		glycemic_index: 0,
 		carbs: 0,
 		glycemic_load: 0, 
-		serving: '100g'
+		serving: {
+			amount: 100,
+			unit: 'g'
+		}
 	}
 
 	export default {
@@ -71,6 +75,19 @@
                 form: new Form(default_form),
                 multi_create: false,
                 shared: store
+			}
+		},
+		computed: {
+			servingSize: {
+				get() {
+					console.log(this.serving)
+					return `${this.form.serving.amount} ${this.form.serving.unit}`
+				},
+				set(newValue) {
+					let [serving, ...amount] = newValue.split(' ');
+					this.serving = serving;
+					this.unit = amount.join('');
+				}
 			}
 		},
 		methods: {
@@ -84,6 +101,12 @@
                             this.form = new Form(default_form)
                         }
                     });
+			},
+			setServingSize(newValue, event) {
+					console.log(event)
+					let [serving, ...amount] = newValue.split(' ');
+					this.form.serving.amount = parseInt(serving);
+					this.form.serving.unit = amount.join('');
 			}
 		}
 	}

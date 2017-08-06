@@ -8,7 +8,8 @@ module.exports = {
     plugins: ["html"],
     globals: {
         "Vue": true,
-        "axios": true
+        "axios": true,
+        "store": true
     },
     extends: 'eslint:recommended',
     rules: {
@@ -22,7 +23,7 @@ module.exports = {
         'no-mixed-spaces-and-tabs': 'error',
         'indent': 'error',
         'no-var': 'error',
-        'no-debugger': 0
+        'no-debugger': 0,
     },
     parserOptions: {
         "sourceType": "module"
