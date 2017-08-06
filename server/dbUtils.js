@@ -17,7 +17,7 @@ function getFoodWithQuantity(food) {
 module.exports.loadDatabase = (filepath) => {
     let content = fs.readFileSync(path.resolve(filepath));
     let db = JSON.parse(content);
-    db= db.map(food => getFoodWithQuantity(food));
+    // db= db.map(food => getFoodWithQuantity(food));
     return db;
 };
 
