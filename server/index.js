@@ -27,7 +27,10 @@ const database = dbUtils.loadDatabase(db_path);
 function validationConverter(validationResults) {
     let converted = {};
     for(let val of validationResults) {
-        converted[val.param] = [val.msg];
+        if(!converted[val.param]) {
+            converted[val.param] = [];
+        }
+        converted[val.param].push(val.msg);
     }
     console.log(converted);
     return converted;
@@ -67,8 +70,8 @@ app.post('/aliments', (req, res) => {
     req.checkBody('glycemic_load','Glycemic load must be a number').isInt();
     req.checkBody('carbs','Carbs percentage must be a number').isInt();
     req.checkBody('serving','The serving size is required').notEmpty();
-    req.checkBody('serving.amount').isInt();
-    req.checkBody('serving.unit', 'Serving must have a unit').notEmpty().isAlpha();
+    req.checkBody('serving','Serving need to be a compatible quantity').isQty();
+
 
     req.getValidationResult().then(errors => {
         if (!errors.isEmpty()) {
@@ -81,7 +84,7 @@ app.post('/aliments', (req, res) => {
             gi: parseInt(req.body.glycemic_index),
             carbs_perc: parseInt(req.body.carbs),
             gl: parseInt(req.body.glycemic_load),
-            serving: new Qty(`${req.body.serving}`)
+            serving: Qty(req.body.serving)
         };
         database.push(food);
         dbUtils.saveDatabase(database, db_path);

@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
+const Qty = require('js-quantities');
 
 let app = express();
 // mongo.connect();
@@ -18,7 +19,18 @@ app.use( (req, res, next) => {
 // Body content parsers
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(expressValidator());
+app.use(expressValidator({
+    customValidators: {
+        isQty(value) {
+            try {
+                let qty = new Qty(value);
+                return !qty.isUnitless();
+            } catch (e) {
+                return false;
+            }
+        }
+    }
+}));
 
 // Add validation
 
