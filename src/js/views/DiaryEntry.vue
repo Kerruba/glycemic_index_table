@@ -13,15 +13,15 @@
             <a v-for="food in shared.aliments" class="panel-block" v-text="food.name" @click="changeSelected(food)">
             </a>
             <!-- <div class="field">
-                    <label class="label" for="search">Search</label>
-                    <p class="control">
-                        <input class="input" type="text" id="search" name="search" />
-                    </p>
-                </div> -->
+                        <label class="label" for="search">Search</label>
+                        <p class="control">
+                            <input class="input" type="text" id="search" name="search" />
+                        </p>
+                    </div> -->
     
             <!-- Food list -->
         </div>
-        <div class="column is-quater" v-if="isSelected">
+        <div class="column is-quater">
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title">
@@ -33,72 +33,71 @@
                         </span>
                     </a>
                 </header>
-                <div class="card-content">
-                    <p class="content" v-text="selected.details" v-if="selected.details"></p>
-                    <p class="content" v-else>No further details</p>
+                <div class="card-content" v-if="isSelected">
+    
+                    <p class="title" v-text="selected.name"></p>
+                    <p class="subtitle is-small" v-text="selected.details" v-if="selected.details"></p>
+                    <p class="field is-grouped is-grouped-multiline">
+                        <div class="tags has-addons">
+                            <span>GL</span>
+                            <span class="tag" v-text="selected.gl"></span>
+                            <span>GI</span>
+                            <span class="tag" v-text="selected.gi"></span>
+                        </div>
+                    </p>
                 </div>
+                <div class="card-content" v-else>
+                    No food selected
+                </div>
+            </div>
+            <div>
+                <div class="field">
+                    <label class="label" for="serving">Serving size</label>
+                    <p class="control">
+                        <input class="input" type="text" id="serving" name="serving" v-model="food_serving" />
+                    </p>
+                </div>
+                <button class="button is-primary" @click="addToMeal()">Add to meal</button>
             </div>
         </div>
     
-        <div class="column is-one-quarter" v-if="isSelected">
-            <div class="field">
-                <label class="label" for="serving">Serving size</label>
-                <p class="control">
-                    <input class="input" type="text" id="serving" name="serving" v-model="selected.serving"/>
-                </p>
-            </div>
-            <button class="button is-primary" @click="addToMeal()">Add to meal</button>
-        </div>
-        <div class="column is-one-quarter">
-            <p class="panel-heading">Meal</p>
-            <div v-if="foodInMeal">
-                <div v-for="food in meal" class="panel-block">
-                     <div class="level" style="width:100%">
+        <div class="column is-half">
+                <p class="panel-heading">Meal</p>
+                <div v-if="foodInMeal">
+                    <div v-for="food in meal" class="panel-block">
+                        <div class="level" style="width:100%">
                             <div class="level-left">
                                 <button class="level-item button is-small is-danger"> X </button>
                                 <p class="level-item" v-text="food.name"></p>
+                                <p class="level-item" v-text="food.serving.toString()"></p>
                             </div>
                             <div class="level-right">
                                 <p class="level-item" v-text="food.gl"></p>
                             </div>
-                    </div> 
-                </div>
-                <div class="panel-block">
-                    <div class="level" style="width:100%">
-                        <div class="level-left">
-                            <p class="level-item">Total load</p>
                         </div>
-                        <div class="level-right" v-text="totalLoad">
-                            
+                    </div>
+                    <div class="panel-block">
+                        <div class="level" style="width:100%">
+                            <div class="level-left">
+                                <p class="level-item">Total load</p>
+                            </div>
+                            <div class="level-right" v-text="totalLoad">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <p class="panel-block" v-else> No food yet</p>
-            <!-- <table class="table panel-block">
-                <tbody v-if="foodInMeal">
-                    <tr v-for="food in meal">
-                        <td v-text="food.name"></td>
-                        <td>
-                            <button class="button is-danger">X</button>
-                        </td>
-                    </tr>
-                </tbody>
-                <tbody v-else>
-                    <tr>
-                        <td>No food</td>
-                    </tr>
-                </tbody>
-            </table> -->
+                <p class="panel-block" v-else> No food yet</p>
+            <p class="panel-block">
+                <button class="button is-primary" @click="saveMealEntry()">Save meal</button> 
+            </p>
         </div>
     </div>
 </template>
 
 <script>
 
-function isEmpty(obj) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-}
+import _ from 'lodash';
+import Qty from 'js-quantities'
 
 function getGlycemicLoad(food) {
     let serving = parseServing(food.serving);
@@ -114,18 +113,19 @@ export default {
         return {
             shared: store.state,
             selected: {},
+            food_serving: "",
             meal: [],
         }
     },
     computed: {
         isSelected() {
-            return !isEmpty(this.selected);
+            return !_.isEmpty(this.selected);
         },
         foodInMeal() {
             return this.meal.length > 0;
         },
         totalLoad() {
-            return this.meal.reduce((total, food)=> {
+            return this.meal.reduce((total, food) => {
                 // TODO need proper conversion, ok now as a temporary solution
                 return total + food.gl;
             }, 0)
@@ -134,11 +134,13 @@ export default {
     methods: {
         changeSelected(food) {
             this.selected = food;
+            this.food_serving = food.serving;
         },
         addToMeal() {
-            if (!isEmpty(this.selected)) {
-                let newFood = Object.assign({}, this.selected);
-                newFood.gl = getGlycemicLoad(newFood);
+            if (!_.isEmpty(this.selected)) {
+                let newFood = _.cloneDeep(this.selected);
+                newFood.serving = Qty(this.food_serving);
+                newFood.gl = Math.round(this.selected.gl * newFood.serving.div(this.selected.serving));
                 this.meal.push(newFood);
                 this.selected = {};
             }
