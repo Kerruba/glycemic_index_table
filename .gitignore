@@ -6,3 +6,5 @@ client/assets
 .gitignoew
 dbConvertion.js
 newDatabase.json
+food_database.json
+meal_database.json

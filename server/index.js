@@ -21,8 +21,9 @@ const Qty = require('js-quantities');
 // });
 
 
-let [,,db_path = 'database.json'] = process.argv;
-const database = dbUtils.loadDatabase(db_path);
+let [,,food_db_path = 'food_database.json', meal_db_path = 'meal_database.json' ] = process.argv;
+const food_database = dbUtils.loadDatabase(food_db_path);
+const meal_database = [];
 
 function validationConverter(validationResults) {
     let converted = {};
@@ -37,7 +38,7 @@ function validationConverter(validationResults) {
 }
 
 app.get('/aliments', (req,res) => {
-    res.json(database);
+    res.json(food_database);
     /*
     // res.json(req.query)
     // res.json(req.query); 
@@ -86,9 +87,9 @@ app.post('/aliments', (req, res) => {
             gl: parseInt(req.body.glycemic_load),
             serving: Qty(req.body.serving)
         };
-        database.push(food);
-        dbUtils.saveDatabase(database, db_path);
-        res.json(database);
+        food_database.push(food);
+        dbUtils.saveDatabase(food_database, food_db_path);
+        res.json(food_database);
         // res.redirect('/index.html');
     });
 });
@@ -104,18 +105,28 @@ app.delete('/aliments/:foodId', (req, res) => {
                 return;
             }
             let foodId = parseInt(req.params.foodId);
-            if (foodId > database.length) {
+            if (foodId > food_database.length) {
                 res.status(400).send('The provided ID is not present in the database');
                 return;
             }
-            database.splice(foodId,1);
-            dbUtils.saveDatabase(database, db_path);
-            res.json(database);
+            food_database.splice(foodId,1);
+            dbUtils.saveDatabase(food_database, food_db_path);
+            res.json(food_database);
         });
+});
+
+app.post('/meals', (req, res) => {
+    let meal = {
+        date: new Date(),
+        content: req.body
+    };
+    meal_database.push(meal);
+    dbUtils.saveDatabase(meal_database, meal_db_path);
+    res.status(201).send('Element stored to the database');
+    return;
 });
 
 app.listen(3000, function() {
     'use strict';
-    console.log(database);
     console.log('Example app listening on port 3000!');
 });

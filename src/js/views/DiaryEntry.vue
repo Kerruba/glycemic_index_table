@@ -4,13 +4,13 @@
             <p class="panel-heading">Food list</p>
             <div class="panel-block">
                 <p class="control has-icons-left">
-                    <input class="input is-small" type="text" placeholder="Search">
+                    <input class="input is-small" type="text" placeholder="Search" v-model="filter.key">
                     <span class="icon is-small is-left">
                         <i class="fa fa-search"></i>
                     </span>
                 </p>
             </div>
-            <a v-for="food in shared.aliments" class="panel-block" v-text="food.name" @click="changeSelected(food)">
+            <a v-for="food in getAliments()" class="panel-block" v-text="food.name" @click="changeSelected(food)">
             </a>
             <!-- <div class="field">
                         <label class="label" for="search">Search</label>
@@ -114,6 +114,9 @@ export default {
             shared: store.state,
             selected: {},
             food_serving: "",
+            filter: {
+                key: ""
+            },
             meal: [],
         }
     },
@@ -132,6 +135,13 @@ export default {
         }
     },
     methods: {
+        getAliments() {
+            if (_.isEmpty(this.filter.key)) {
+                return this.shared.aliments;
+            } else {
+                return this.shared.aliments.filter(value => _.startsWith(value.name.toLowerCase(), this.filter.key.toLowerCase()));
+            }
+        },
         changeSelected(food) {
             this.selected = food;
             this.food_serving = food.serving;
@@ -144,6 +154,16 @@ export default {
                 this.meal.push(newFood);
                 this.selected = {};
             }
+        },
+        saveMealEntry() {
+            axios.post('/meals', this.meal)
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            
         }
     }
 }
