@@ -78,8 +78,8 @@
 		methods: {
 			onSubmit() {
 				this.form.post('/aliments')
-                    .then((response) => {
-                        store.setAlimentsAction(response.data);
+                    .then((data) => {
+                        store.setAlimentsAction(data);
                         if (!this.multi_create) {
                             this.$router.push('/')
                         } else {
