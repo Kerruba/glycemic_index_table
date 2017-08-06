@@ -22,7 +22,7 @@ const Qty = require('js-quantities');
 
 
 let [,,food_db_path = 'food_database.json', meal_db_path = 'meal_database.json' ] = process.argv;
-const food_database = dbUtils.loadDatabase(food_db_path);
+const food_database = dbUtils.loadFoodDatabase(food_db_path);
 const meal_database = [];
 
 function validationConverter(validationResults) {

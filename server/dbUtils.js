@@ -11,6 +11,14 @@ function getFoodWithQuantity(food) {
     return food;
 }
 
+
+module.exports.loadFoodDatabase = (filepath) => {
+    let db = this.loadDatabase(filepath);
+    db= db.map(food => getFoodWithQuantity(food));
+    return db;
+
+};
+
 /**
  * Load database from a filepath
  */
