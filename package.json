@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm-run-all --parallel watch:server watch:build",
     "watch:build": "webpack --watch",
-    "watch:server": "nodemon ./server/index.js --watch ./server/ --watch database.json" 
+    "watch:server": "nodemon --watch ./server/ --watch database.json ./server/index.js newDatabase.json"
   },
   "author": "kerruba",
   "license": "ISC",
@@ -48,6 +48,8 @@
     "express": "^4.14.0",
     "express-validator": "^3.2.1",
     "foundation-sites": "^6.2.4",
+    "js-quantities": "^1.6.6",
+    "lodash": "^4.17.4",
     "mongodb": "^2.2.11",
     "mustache": "^2.2.1",
     "vue": "^2.0.3"
