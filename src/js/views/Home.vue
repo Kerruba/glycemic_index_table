@@ -13,25 +13,15 @@
             </thead>
             <tbody>
                 <tr v-for="(food,index) in shared.aliments">
-                    <th style="width: 10px"><button class="button is-danger" @click="delete_aliment(index)">X</button></th>
+                    <th style="width: 10px"><button class="button is-danger" @click="delete_aliment(food._id)">X</button></th>
                     <td v-text="food.name"></td> 
-                    <td v-text="food.gi"></td> 
-                    <td v-text="food.gl"></td> 
-                    <td v-text="food.carbs_perc"></td> 
+                    <td v-text="food.glycemic_index"></td> 
+                    <td v-text="food.glycemic_load"></td> 
+                    <td v-text="food.carbs_percentual"></td> 
                     <td v-text="food.serving.toString()"></td>
                 </tr>
             </tbody>
         </table> 
-         <!-- <div v-for="(food, index) in shared.aliments" class="columns">
-                <div class="column is-1">
-                </div>
-                <h3 class="column is-3">{{food.name}}</h3>
-                <ul class="column">
-                    <li v-if="food.details">{{food.details}}</li>
-                    <li>{{food.serving}}</li>
-                    <li>{{food.gl}}</li>
-                </ul>
-        </div>  -->
     </div>
 </template>
 
@@ -44,11 +34,6 @@ export default {
             shared: store.state
         }
     },
-    // mounted() { 
-    //     this.$nextTick(() => {
-    //         this.get_aliments();
-    //     })
-    // },
     methods: {
         get_aliments() {
             axios.get('/aliments')

@@ -17,7 +17,7 @@ function validationConverter(validationResults) {
 
 module.exports.getAliments = function(req,res) {
     // res.json(food_database);
-    Aliment.find({}).then(docs => res.json(docs)).catch(res.send(500));
+    Aliment.find({}).then(docs => res.json(docs)).catch(err=>res.send(500).json(err));
 };
 
 module.exports.postAliments = function(req,res) {
@@ -35,7 +35,7 @@ module.exports.postAliments = function(req,res) {
             res.status(400).json(validationConverter(errors.array()));
             return;
         }
-        let food = {
+        let alimentContent = {
             name: req.body.name,
             details: req.body.details,
             glycemic_index: parseInt(req.body.glycemic_index),
@@ -44,13 +44,13 @@ module.exports.postAliments = function(req,res) {
             serving: Qty(req.body.serving)
         };
         // food_database.push(food);
-        let aliment = new Aliment(food);
+        let aliment = new Aliment(alimentContent);
         // dbUtils.saveDatabase(food_database, global.food_db_path);
         aliment.save((err) => {
             if (err) {
-                res.send(500);
+                res.status(500).send('An error occured while saving aliment to the database');
             } else {
-                Aliment.find({}).then(docs => res.json(docs));
+                Aliment.find({}).then(docs => res.json(docs)).catch(err => res.status(500).json(err));
             }
         });
     });
@@ -58,21 +58,14 @@ module.exports.postAliments = function(req,res) {
 
 module.exports.deleteAliments = function(req, res) {
     console.log(req.params);
-    req.checkParams('foodId', 'Food id must be a number').isInt();
-
-    req.getValidationResult()
-        .then(results => {
-            if (!results.isEmpty()) {
-                res.status(400).json(validationConverter(results.array()));
-                return;
-            }
-            let foodId = parseInt(req.params.foodId);
-            if (foodId > food_database.length) {
-                res.status(400).send('The provided ID is not present in the database');
-                return;
-            }
-            food_database.splice(foodId,1);
-            dbUtils.saveDatabase(food_database, global.food_db_path);
-            res.json(food_database);
-        });
+    Aliment.findByIdAndRemove(req.params.foodId)
+        .then(() => Aliment.find({}).then(docs => res.json(docs)))
+        .catch(err => res.status(400).json(err));
+    // // if (foodId > food_database.length) {
+    // //     res.status(400).send('The provided ID is not present in the database');
+    // //     return;
+    // // }
+    // food_database.splice(foodId,1);
+    // dbUtils.saveDatabase(food_database, global.food_db_path);
+    // res.json(food_database);
 };

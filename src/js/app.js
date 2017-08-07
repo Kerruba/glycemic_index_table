@@ -14,6 +14,7 @@ new Vue({
         get_aliments() {
             axios.get('/aliments')
                 .then(function (response) {
+                    debugger;
                     store.setAlimentsAction(response.data);
                 })
                 .catch(function (error) {

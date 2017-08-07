@@ -40,9 +40,9 @@
                     <p class="field is-grouped is-grouped-multiline">
                         <div class="tags has-addons">
                             <span>GL</span>
-                            <span class="tag" v-text="selected.gl"></span>
+                            <span class="tag" v-text="selected.glycemic_load"></span>
                             <span>GI</span>
-                            <span class="tag" v-text="selected.gi"></span>
+                            <span class="tag" v-text="selected.glycemic_index"></span>
                         </div>
                     </p>
                 </div>
@@ -72,7 +72,7 @@
                                 <p class="level-item" v-text="food.serving.toString()"></p>
                             </div>
                             <div class="level-right">
-                                <p class="level-item" v-text="food.gl"></p>
+                                <p class="level-item" v-text="food.glycemic_load"></p>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ import Qty from 'js-quantities'
 
 function getGlycemicLoad(food) {
     let serving = parseServing(food.serving);
-    return food.gl * serving / 100;
+    return food.glycemic_load * serving / 100;
 }
 
 function parseServing(servingString) {
@@ -130,7 +130,7 @@ export default {
         totalLoad() {
             return this.meal.reduce((total, food) => {
                 // TODO need proper conversion, ok now as a temporary solution
-                return total + food.gl;
+                return total + food.glycemic_load;
             }, 0)
         }
     },
@@ -150,7 +150,7 @@ export default {
             if (!_.isEmpty(this.selected)) {
                 let newFood = _.cloneDeep(this.selected);
                 newFood.serving = Qty(this.food_serving);
-                newFood.gl = Math.round(this.selected.gl * newFood.serving.div(this.selected.serving));
+                newFood.glycemic_load = Math.round(this.selected.glycemic_load * newFood.serving.div(this.selected.serving));
                 this.meal.push(newFood);
                 this.selected = {};
             }
@@ -158,7 +158,7 @@ export default {
         saveMealEntry() {
             axios.post('/meals', this.meal)
                 .then(response => {
-                    console.log(response);
+                    this.$router.push('/')
                 })
                 .catch(error => {
                     console.error(error);

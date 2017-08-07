@@ -4,6 +4,7 @@ const expressValidator = require('express-validator');
 const Qty = require('js-quantities');
 const dbUtils = require('./utilities/dbUtils.js');
 let mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 //Set up default mongoose connection
 
