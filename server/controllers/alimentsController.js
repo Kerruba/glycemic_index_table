@@ -1,5 +1,6 @@
 let Qty = require('js-quantities');
-let dbUtils = require('../utilities/dbUtils.js');
+// let dbUtils = require('../utilities/dbUtils.js');
+let Aliment = require('../models/schemas').Aliment;
 
 function validationConverter(validationResults) {
     let converted = {};
@@ -15,7 +16,8 @@ function validationConverter(validationResults) {
 
 
 module.exports.getAliments = function(req,res) {
-    res.json(food_database);
+    // res.json(food_database);
+    Aliment.find({}).then(docs => res.json(docs)).catch(res.send(500));
 };
 
 module.exports.postAliments = function(req,res) {
@@ -36,14 +38,21 @@ module.exports.postAliments = function(req,res) {
         let food = {
             name: req.body.name,
             details: req.body.details,
-            gi: parseInt(req.body.glycemic_index),
-            carbs_perc: parseInt(req.body.carbs),
-            gl: parseInt(req.body.glycemic_load),
+            glycemic_index: parseInt(req.body.glycemic_index),
+            carbs_percentual: parseInt(req.body.carbs),
+            glycemic_load: parseInt(req.body.glycemic_load),
             serving: Qty(req.body.serving)
         };
-        food_database.push(food);
-        dbUtils.saveDatabase(food_database, global.food_db_path);
-        res.json(food_database);
+        // food_database.push(food);
+        let aliment = new Aliment(food);
+        // dbUtils.saveDatabase(food_database, global.food_db_path);
+        aliment.save((err) => {
+            if (err) {
+                res.send(500);
+            } else {
+                Aliment.find({}).then(docs => res.json(docs));
+            }
+        });
     });
 };
 

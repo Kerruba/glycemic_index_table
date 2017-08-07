@@ -50,6 +50,7 @@
     "foundation-sites": "^6.2.4",
     "js-quantities": "^1.6.6",
     "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
     "mongodb": "^2.2.11",
     "mongoose": "^4.11.5",
     "mustache": "^2.2.1",
