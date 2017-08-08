@@ -16,13 +16,13 @@ let store = {
         });
         this.state.aliments = newAliments;
     },
-    setMealsAction (newValue) {
-        if (this.debug) console.log('setMealsAction triggered with', newValue);
-        this.state.meals = newValue;
-    },
     clearAlimentsAction () {
         if (this.debug) console.log('clearAlimentsAction triggered');
         this.state.aliments = [];
+    },
+    setMealsAction (newValue) {
+        if (this.debug) console.log('setMealsAction triggered with', newValue);
+        this.state.meals = newValue;
     }
 };
 

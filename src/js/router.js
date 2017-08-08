@@ -6,12 +6,20 @@ let routes = [
         component: require('./views/Home.vue')
     },
     {
-        path: '/add',
+        path: '/aliment',
         component: require('./views/NewFood.vue')
     },
     {
-        path: '/diary_entry',
-        component: require('./views/DiaryEntry.vue')
+        path: '/aliment/:id',
+        component: require('./views/NewFood.vue')
+    },
+    {
+        path: '/meal',
+        component: require('./views/NewMeal.vue')
+    },
+    {
+        path: '/meal/:id',
+        component: require('./views/NewMeal.vue')
     }
 ];
 

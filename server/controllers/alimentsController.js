@@ -56,6 +56,12 @@ module.exports.postAliments = function(req,res) {
     });
 };
 
+module.exports.updateAliments = function(req, res) {
+    Aliment.findByIdAndUpdate(req.params.foodId, req.body)
+        .then(() => Aliment.find({}).then(docs => res.json(docs)))
+        .catch(err => res.status(400).json(err));
+};
+
 module.exports.deleteAliments = function(req, res) {
     console.log(req.params);
     Aliment.findByIdAndRemove(req.params.foodId)

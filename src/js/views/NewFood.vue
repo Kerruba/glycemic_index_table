@@ -24,9 +24,9 @@
 		<div class="field">
 			<label class="label" for="carbs">Carbs (%)</label>
 			<p class="control">
-				<input class="input" type="text" id="carbs" name="carbs" v-model="form.carbs" placeholder="Percentage of carbs for serving"/> 
+				<input class="input" type="text" id="carbs" name="carbs" v-model="form.carbs_percentual" placeholder="Percentage of carbs for serving"/> 
 			</p>
-			<span class="help is-danger" v-if="form.errors.has('carbs')" v-text="form.errors.get('carbs')"></span>
+			<span class="help is-danger" v-if="form.errors.has('carbs_percentual')" v-text="form.errors.get('carbs_percentual')"></span>
 		</div>
 		<div class="field">
 			<label class="label" for="glycemic_load">Glycemic load</label>
@@ -62,7 +62,7 @@
 		name: '',
 		details: '',
 		glycemic_index: 0,
-		carbs: 0,
+		carbs_percentual: 0,
 		glycemic_load: 0, 
 		serving: new Qty('100 g')
 	}
@@ -71,21 +71,39 @@
 		data() {
 			return {
                 form: new Form(default_form),
-                multi_create: false,
-                shared: store
+				multi_create: false,
+				isUpdate: false,
+                shared: store.state
 			}
+		},
+		created() {
+			this.$nextTick(() => {
+				if (this.$route.params.id) {
+					let updateAliment = this.shared.aliments.filter(aliment => aliment._id === this.$route.params.id);
+					if (updateAliment) {
+						this.isUpdate = true;
+						this.form = new Form(updateAliment[0]);
+					}
+				}
+			});
 		},
 		methods: {
 			onSubmit() {
-				this.form.post('/aliments')
-                    .then((data) => {
-                        store.setAlimentsAction(data);
-                        if (!this.multi_create) {
-                            this.$router.push('/')
-                        } else {
-                            this.form = new Form(default_form)
-                        }
-                    });
+				function updateStore(data) {
+					store.setAlimentsAction(data);
+					if (!this.multi_create) {
+						this.$router.push('/')
+					} else {
+						this.form = new Form(default_form)
+					}
+				} 
+				if (this.isUpdate) {
+					this.form.put('/aliments/' + this.$route.params.id)
+						.then(data => updateStore.call(this,data));
+				} else {
+					this.form.post('/aliments')
+						.then(data => updateStore.call(this,data));
+				}
 			}
 		}
 	}

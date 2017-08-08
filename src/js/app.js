@@ -5,24 +5,19 @@ import router from './router';
 new Vue({
     el: '#app',
     router: router,
-    mounted() {
+    created() {
         this.$nextTick(() => {
-            this.get_aliments();
-            this.get_meals();
+            this.getAliments();
+            this.getMeals();
         });
     },
     methods: {
-        get_aliments() {
+        getAliments() {
             axios.get('/aliments')
-                .then(function (response) {
-                    store.setAlimentsAction(response.data);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
+                .then(response => store.setAlimentsAction(response.data))
+                .catch(error => console.log(error));
         },
-        get_meals() {
+        getMeals() {
             axios.get('/meals')
                 .then(response => store.setMealsAction(response.data))
                 .catch(error => console.error(error));
