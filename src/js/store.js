@@ -4,7 +4,8 @@ import Qty from 'js-quantities';
 let store = {
     debug: true,
     state: {
-        aliments: []
+        aliments: [],
+        meals: []
     },
     setAlimentsAction (newValue) {
         if (this.debug) console.log('setAlimentsAction triggered with', newValue);
@@ -14,6 +15,10 @@ let store = {
             return temp;
         });
         this.state.aliments = newAliments;
+    },
+    setMealsAction (newValue) {
+        if (this.debug) console.log('setMealsAction triggered with', newValue);
+        this.state.meals = newValue;
     },
     clearAlimentsAction () {
         if (this.debug) console.log('clearAlimentsAction triggered');

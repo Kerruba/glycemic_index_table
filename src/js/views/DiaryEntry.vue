@@ -88,7 +88,7 @@
                 </div>
                 <p class="panel-block" v-else> No food yet</p>
             <p class="panel-block">
-                <button class="button is-primary" @click="saveMealEntry()">Save meal</button> 
+                <button class="button is-primary" @click="saveMealEntry()" :disabled="!foodInMeal">Save meal</button> 
             </p>
         </div>
     </div>
@@ -156,7 +156,11 @@ export default {
             }
         },
         saveMealEntry() {
-            axios.post('/meals', this.meal)
+            let mealToSave = {
+                content: this.meal,
+                total_load: this.totalLoad
+            };
+            axios.post('/meals', mealToSave)
                 .then(response => {
                     this.$router.push('/')
                 })

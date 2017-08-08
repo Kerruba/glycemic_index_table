@@ -13,6 +13,8 @@ let AlimentModel = new Schema({
 
 let MealModel = new Schema({
     date: Date,
+    description: String,
+    total_load: Number,
     content: [{type: Schema.Types.ObjectId, ref: 'AlimentModel'}]
 });
 
