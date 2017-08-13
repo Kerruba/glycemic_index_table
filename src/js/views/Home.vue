@@ -11,7 +11,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="meal in shared.meals">
+                    <tr v-for="meal in meals">
                         <td v-text="getMealDate(meal)"></td>
                         <td v-text="meal.description"></td>
                         <td v-text="meal.total_load"></td>
@@ -36,7 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(food,index) in shared.aliments">
+                    <tr v-for="(food,index) in aliments">
                         <td v-text="food.name"></td>
                         <td v-text="food.glycemic_index"></td>
                         <td v-text="food.glycemic_load"></td>
@@ -56,12 +56,21 @@
 
 <script>
 import { Qty } from 'js-quantities';
-import {format} from 'date-fns';
+import { format } from 'date-fns';
+// import { mapMutations } from 'vuex';
     
 export default {
-    data() {
-        return {
-            shared: store.state
+    // data() {
+    //     return {
+    //         shared: store.state
+    //     }
+    // },
+    computed: {
+        meals() {
+            return this.$store.state.meals;
+        },
+        aliments() {
+            return this.$store.state.aliments;
         }
     },
     methods: {
@@ -78,7 +87,8 @@ export default {
         deleteAliment(index) {
             axios.delete(`/aliments/${index}`)
                 .then(function (response) {
-                    store.setAlimentsAction(response.data);
+                    this.$store.setAlimentsDatabase(response.data);
+                    // this.setAlimentsDatabase(response.data);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -95,9 +105,16 @@ export default {
         },
         deleteMeal(id) {
             axios.delete(`/meals/${index}`)
-            .then(res => store.setMealsAction(res.data))
+            .then(res => {
+                // this.setMealsDatabase(res.data)
+                this.$store.setMealsDatabase(res.data);
+            })
             .catch(err => console.log(err));
-        }
+        },
+        // ...mapMutations([
+        //     'setMealsDatabase',
+        //     'setAlimentsDatabase'
+        // ])
     }
 }
 </script>

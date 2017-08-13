@@ -10,7 +10,7 @@
                     </span>
                 </p>
             </div>
-            <a v-for="food in getAliments()" class="panel-block" v-text="food.name" @click="changeSelected(food)">
+            <a v-for="food in foodList" class="panel-block" v-text="food.name" @click="changeSelected(food)">
             </a>
             <!-- <div class="field">
                         <label class="label" for="search">Search</label>
@@ -103,6 +103,7 @@
 import _ from 'lodash';
 import { format } from 'date-fns';
 import Qty from 'js-quantities'
+import { mapMutations } from 'vuex';
 
 function getGlycemicLoad(food) {
     let serving = parseServing(food.serving);
@@ -116,7 +117,7 @@ function parseServing(servingString) {
 export default {
     data() {
         return {
-            shared: store.state,
+            // shared: store.state,
             selected: {},
             food_serving: "",
             isUpdate: false,
@@ -130,17 +131,6 @@ export default {
             },
         }
     },
-    created() {
-        this.$nextTick(() => {
-            if (this.$route.params.id) {
-                let updateMeal = this.shared.meals.filter(meal => meal._id === this.$route.params.id);
-                if (!_.isEmpty(updateMeal)) {
-                    this.isUpdate = true;
-                    this.meal = updateMeal[0];
-                }
-            }
-        });
-    },
     computed: {
         isSelected() {
             return !_.isEmpty(this.selected);
@@ -153,16 +143,27 @@ export default {
                 // TODO need proper conversion, ok now as a temporary solution
                 return total + food.glycemic_load;
             }, 0)
+        },
+        foodList() {
+            if (!_.isEmpty(this.filter.key)) {
+                return this.$store.aliments.filter(value => _.startsWith(value.name.toLowerCase(), this.filter.key.toLowerCase()));
+            }
+            return this.$store.aliments;
+
         }
     },
-    methods: {
-        getAliments() {
-            if (_.isEmpty(this.filter.key)) {
-                return this.shared.aliments;
-            } else {
-                return this.shared.aliments.filter(value => _.startsWith(value.name.toLowerCase(), this.filter.key.toLowerCase()));
+    created() {
+        this.$nextTick(() => {
+            if (this.$route.params.id) {
+                let updateMeal = this.$store.getters.getMealById(this.$route.params.id);
+                if (!_.isEmpty(updateMeal)) {
+                    this.isUpdate = true;
+                    this.meal = updateMeal[0];
+                }
             }
-        },
+        });
+    },
+    methods: {
         changeSelected(food) {
             this.selected = food;
             this.food_serving = food.serving;
@@ -187,9 +188,15 @@ export default {
                 url: this.isUpdate ? `/meals/${this.meal._id}` : '/meals',
                 data: mealToSave
             })
-            .then(response =>  this.$router.push('/'))
+            .then(response =>  {
+                this.$store.commit('setMealsDatabase', response.data);
+                this.$router.push('/')
+            })
             .catch(error =>  console.error(error));
-        }
+        },
+        // ...mapMutations([
+        //     'setMealsDatabase'
+        // ])
     }
 }
 </script>

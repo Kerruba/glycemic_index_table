@@ -55,8 +55,9 @@
 </template>
 
 <script>
-	import {Errors, Form} from '../components/Form';
+	import { Errors, Form } from '../components/Form';
 	import Qty from 'js-quantities';
+	import { mapMutations } from 'vuex';
 
 	let default_form = {
 		name: '',
@@ -73,13 +74,13 @@
                 form: new Form(default_form),
 				multi_create: false,
 				isUpdate: false,
-                shared: store.state
+                // shared: store.state
 			}
 		},
 		created() {
 			this.$nextTick(() => {
 				if (this.$route.params.id) {
-					let updateAliment = this.shared.aliments.filter(aliment => aliment._id === this.$route.params.id);
+					let updateAliment = this.$store.getters.getAlimentById(this.$route.params.id);
 					if (updateAliment) {
 						this.isUpdate = true;
 						this.form = new Form(updateAliment[0]);
@@ -90,7 +91,7 @@
 		methods: {
 			onSubmit() {
 				function updateStore(data) {
-					store.setAlimentsAction(data);
+					this.$store.commit('setAlimentsDatabase', data);
 					if (!this.multi_create) {
 						this.$router.push('/')
 					} else {
@@ -104,7 +105,10 @@
 					this.form.post('/aliments')
 						.then(data => updateStore.call(this,data));
 				}
-			}
+			},
+			// ...mapMutations([
+			// 	'setAlimentsDatabase'
+			// ])
 		}
 	}
 </script>
