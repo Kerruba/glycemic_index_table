@@ -25,7 +25,7 @@ module.exports.postAliments = function(req,res) {
     req.checkBody('name','A name is required').notEmpty();
     req.checkBody('glycemic_index','Glycemic index must be a number').isInt();
     req.checkBody('glycemic_load','Glycemic load must be a number').isInt();
-    req.checkBody('carbs','Carbs percentage must be a number').isInt();
+    req.checkBody('carbs_percentual','Carbs percentage must be a number').isInt();
     req.checkBody('serving','The serving size is required').notEmpty();
     req.checkBody('serving','Serving need to be a compatible quantity').isQty();
 
@@ -39,7 +39,7 @@ module.exports.postAliments = function(req,res) {
             name: req.body.name,
             details: req.body.details,
             glycemic_index: parseInt(req.body.glycemic_index),
-            carbs_percentual: parseInt(req.body.carbs),
+            carbs_percentual: parseInt(req.body.carbs_percentual),
             glycemic_load: parseInt(req.body.glycemic_load),
             serving: Qty(req.body.serving)
         };

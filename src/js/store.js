@@ -1,6 +1,7 @@
 import {cloneDeep} from 'lodash';
 import Qty from 'js-quantities';
 
+
 let store = {
     debug: true,
     state: {
@@ -22,7 +23,18 @@ let store = {
     },
     setMealsAction (newValue) {
         if (this.debug) console.log('setMealsAction triggered with', newValue);
+        newValue = newValue.map(meal => {
+            let expandedMeal = meal;
+            expandedMeal.content = meal.content.map(food => {
+                food.serving = Qty(food.serving);
+                return food;
+            });
+            return expandedMeal;
+        });
         this.state.meals = newValue;
+    },
+    deleteMealAction(id) {
+        
     }
 };
 

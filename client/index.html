@@ -8,40 +8,20 @@
     <title>Glycemic Load app</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.4.3/css/bulma.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/style.css">
     <style>
-        .navbar {
-            border-bottom-color: black;
-            border-bottom-width: 2px;
-            border-bottom-style: solid;
-            margin-bottom: 10px;
-        }
-        .logo {
-            background-color: #6DEECA;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 2px;
-        }
-        .logo a {
-            color: #657;
-        }
-        .logo a:hover {
-            color: #333;
-        }
-        .main {
-            padding: 10px;
-        }
     </style>
 </head>
 <body>
 <div id="app">
-    <nav class="navbar">
+    <nav id="navbar" class="navbar">
         <div class="navbar-brand">
             <div class="navbar-item logo">
                 <router-link to="/">Glycemic Load table</router-link>
             </div>
-            <div class="navbar-item">
+            <!-- <div class="navbar-item">
                 <router-link to="/">Home</router-link>
-            </div>
+            </div> -->
         </div>
         <div class="navbar-end">
             <div class="navbar-item">
@@ -52,11 +32,12 @@
             </div>
         </div>
     </nav>
+    
 
     <div class="main">
         <router-view></router-view>
     </div>
 </div>
-<script src="assets/js/app.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>

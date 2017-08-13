@@ -1,5 +1,5 @@
 <template>
-	<form method="POST" action="/aliments" @submit.prevent="onSubmit" @keydown="form.errors.clear($event.target.name)">
+	<form id="new_food_page" method="POST" action="/aliments" @submit.prevent="onSubmit" @keydown="form.errors.clear($event.target.name)">
 		<div class="field">
 			<label class="label" for="name">Name</label>
 			<p class="control">

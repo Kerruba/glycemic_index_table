@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 
 let Schema = mongoose.Schema;
 
-let AlimentModel = new Schema({
+let Aliment = new Schema({
     name: String,
     details: String,
     glycemic_index: { type: Number, min: 0, max: 100, required: true},
@@ -11,12 +11,12 @@ let AlimentModel = new Schema({
     serving: {}
 });
 
-let MealModel = new Schema({
+let Meal = new Schema({
     date: Date,
     description: String,
     total_load: Number,
-    content: [{type: Schema.Types.ObjectId, ref: 'AlimentModel'}]
+    content: [{type: Schema.Types.ObjectId, ref: 'Aliment'}]
 });
 
-module.exports.Aliment = mongoose.model('Aliment', AlimentModel);
-module.exports.Meal = mongoose.model('Meal', MealModel);
+module.exports.Aliment = mongoose.model('Aliment', Aliment);
+module.exports.Meal = mongoose.model('Meal', Meal);

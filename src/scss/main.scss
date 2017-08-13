@@ -1,0 +1,105 @@
+$grid_gap : 20px;
+
+@mixin large-screen {
+    @media screen and (min-width: 1150px) {
+        @content;
+    }
+}
+
+@mixin mid-screen {
+    @media screen and (min-width: 800px) and (max-width: 1149px) {
+        @content;
+    }
+}
+
+@mixin small-screen {
+    @media screen and (max-width: 799px) {
+        @content;
+    }
+}
+
+.base_grid {
+    display: grid;
+    grid-gap: $grid_gap;
+}
+
+.navbar {
+    border-bottom-color: black;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    margin-bottom: 10px;
+}
+
+.logo {
+    background-color: #6DEECA;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1px;
+}
+
+.logo a {
+    color: #657;
+}
+
+.logo a:hover {
+    color: #333;
+}
+
+.main {
+    padding: 10px;
+}
+
+.panel-block__no-bottom-border {
+    border-bottom:  none;
+}
+
+
+
+#homepage {
+    @extend .base_grid;
+    @include large-screen() {
+        grid-template-columns: 1fr 1fr;
+    }
+    @include small-screen() {
+        grid-template-columns:  1fr;
+    }
+}
+
+#new_meal_page {
+    @extend .base_grid;
+    @include large-screen() {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-areas: "list details meal";
+    }
+    
+    @include mid-screen() {
+        grid-template-columns: 1fr 20px 1fr;
+        grid-template-areas: "list auto details"
+                             "list auto meal"
+    }
+    
+    @include small-screen() {
+        grid-template-areas:
+            "list"
+            "details"
+            "meal";
+        grid-template-columns: 1fr;
+    }
+
+    
+    #food_list {
+        grid-area: list;
+    }
+    
+    #food_details {
+        grid-area: details;
+    }
+    
+    #meal_food_composition {
+        grid-area: meal;
+    }
+    
+    input#description {
+        margin: 0 $grid_gap 0 0;
+    }
+}

@@ -6,7 +6,8 @@ const distRoot = './client/assets/';
 
 const ENTRIES = {
     entry: {
-        'js/app.js': path.resolve(__dirname, srcRoot, 'js', 'app.js'),
+        'app.js': path.resolve(__dirname, srcRoot, 'js', 'app.js'),
+        'style.css': path.resolve(__dirname, srcRoot, 'scss', 'main.scss')
     },
     output: {
         filename: '[name]',

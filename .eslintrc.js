@@ -8,6 +8,7 @@ module.exports = {
     plugins: ["html"],
     globals: {
         "Vue": true,
+        "Vuex": true,
         "axios": true,
         "store": true,
         "food_database": true,

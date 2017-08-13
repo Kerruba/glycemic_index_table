@@ -1,6 +1,6 @@
 <template>
-    <div id="foods" class="columns">
-        <div class="column is-half">
+    <div id="homepage">
+        <div class="meals">
             <table class="table is-striped">
                 <thead>
                     <tr>
@@ -23,7 +23,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="column is-half">
+        <div class="aliments">
             <table class="table is-striped">
                 <thead>
                     <tr>
@@ -94,7 +94,9 @@ export default {
             this.$router.push(`/meal/${id}`);
         },
         deleteMeal(id) {
-            store.deleteMealAction(id);
+            axios.delete(`/meals/${index}`)
+            .then(res => store.setMealsAction(res.data))
+            .catch(err => console.log(err));
         }
     }
 }

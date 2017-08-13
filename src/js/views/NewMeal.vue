@@ -1,6 +1,6 @@
 <template>
-    <div class="columns">
-        <div class="column is-one-quarter panel">
+    <div id="new_meal_page">
+        <div id="food_list">
             <p class="panel-heading">Food list</p>
             <div class="panel-block">
                 <p class="control has-icons-left">
@@ -21,7 +21,7 @@
     
             <!-- Food list -->
         </div>
-        <div class="column is-quater">
+        <div id="food_details">
             <div class="card">
                 <header class="card-header">
                     <p class="card-header-title">
@@ -61,13 +61,13 @@
             </div>
         </div>
     
-        <div class="column is-half">
+        <div id="meal_food_composition">
                 <p class="panel-heading">Meal</p>
                 <div v-if="foodInMeal">
-                    <div v-for="food in meal" class="panel-block">
+                    <div v-for="(food,index) in meal.content" class="panel-block" @click="changeSelected(food)">
                         <div class="level" style="width:100%">
                             <div class="level-left">
-                                <button class="level-item button is-small is-danger"> X </button>
+                                <button class="level-item button is-small is-danger" @click="removeFromMeal(index)"> X </button>
                                 <p class="level-item" v-text="food.name"></p>
                                 <p class="level-item" v-text="food.serving.toString()"></p>
                             </div>
@@ -87,8 +87,12 @@
                     </div>
                 </div>
                 <p class="panel-block" v-else> No food yet</p>
-            <p class="panel-block">
-                <button class="button is-primary" @click="saveMealEntry()" :disabled="!foodInMeal">Save meal</button> 
+                <p class="panel-block panel-block__no-bottom-border"><label class="label" for="details">Description</label></p>
+                <p class="panel-block">
+                    <input class="input" type="text" id="description" name="description" v-model="meal.description" placeholder="Meal description"/> 
+                    <button class="button is-primary" @click="saveMealEntry()" :disabled="!foodInMeal">Save meal</button> 
+                </p>
+                
             </p>
         </div>
     </div>
@@ -97,6 +101,7 @@
 <script>
 
 import _ from 'lodash';
+import { format } from 'date-fns';
 import Qty from 'js-quantities'
 
 function getGlycemicLoad(food) {
@@ -114,21 +119,37 @@ export default {
             shared: store.state,
             selected: {},
             food_serving: "",
+            isUpdate: false,
             filter: {
                 key: ""
             },
-            meal: [],
+            meal: {
+                date: new Date(),
+                content: [],
+                description: "" 
+            },
         }
+    },
+    created() {
+        this.$nextTick(() => {
+            if (this.$route.params.id) {
+                let updateMeal = this.shared.meals.filter(meal => meal._id === this.$route.params.id);
+                if (!_.isEmpty(updateMeal)) {
+                    this.isUpdate = true;
+                    this.meal = updateMeal[0];
+                }
+            }
+        });
     },
     computed: {
         isSelected() {
             return !_.isEmpty(this.selected);
         },
         foodInMeal() {
-            return this.meal.length > 0;
+            return this.meal.content.length > 0;
         },
         totalLoad() {
-            return this.meal.reduce((total, food) => {
+            return this.meal.content.reduce((total, food) => {
                 // TODO need proper conversion, ok now as a temporary solution
                 return total + food.glycemic_load;
             }, 0)
@@ -151,23 +172,23 @@ export default {
                 let newFood = _.cloneDeep(this.selected);
                 newFood.serving = Qty(this.food_serving);
                 newFood.glycemic_load = Math.round(this.selected.glycemic_load * newFood.serving.div(this.selected.serving));
-                this.meal.push(newFood);
+                this.meal.content.push(newFood);
                 this.selected = {};
             }
         },
+        removeFromMeal(index) {
+            this.meal.content.splice(index, 1);
+        },
         saveMealEntry() {
-            let mealToSave = {
-                content: this.meal,
-                total_load: this.totalLoad
-            };
-            axios.post('/meals', mealToSave)
-                .then(response => {
-                    this.$router.push('/')
-                })
-                .catch(error => {
-                    console.error(error);
-                })
-            
+            let mealToSave = this.meal;
+            mealToSave.total_load = this.totalLoad;
+            axios({
+                method: this.isUpdate ? 'put' : 'post',
+                url: this.isUpdate ? `/meals/${this.meal._id}` : '/meals',
+                data: mealToSave
+            })
+            .then(response =>  this.$router.push('/'))
+            .catch(error =>  console.error(error));
         }
     }
 }
