@@ -1,4 +1,4 @@
-import { Qty } from 'js-quantities';
+import Qty from 'js-quantities';
 import { Validation } from './Validation.js';
 import _ from 'lodash';
 
@@ -21,6 +21,15 @@ class Food {
     getValidator() {
         let isValidNumber = function(num) {
             return _.isNumber(num) && num >= 0 && num <= 100;
+        };
+        let isValidQty = function(obj) {
+            try {
+                Qty(obj);
+                return true;
+            } catch (err) {
+                return false;
+            }
+
         };
         let rules = [
             {
@@ -45,17 +54,12 @@ class Food {
             },
             {
                 field: 'serving',
-                validation(obj) {
-                    try {
-                        Qty(obj);
-                        return true;
-                    } catch (err) {
-                        return false;
-                    }
-                },
+                validation: isValidQty,
                 message: 'The serving must be a valid serving'
             }
         ];
         return new Validation(rules);
     }
 }
+
+export { Food };

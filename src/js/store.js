@@ -1,5 +1,5 @@
-import { cloneDeep } from 'lodash';
 import Qty from 'js-quantities';
+import { Food } from './components/Food.js';
 import Vuex from 'vuex';
 
 
@@ -21,11 +21,12 @@ const store = new Vuex.Store({
     mutations: {
         setAlimentsDatabase (state, newDatabase) {
             // if (this.debug) console.log('setAlimentsAction triggered with', newValue);
-            let fullDatabase = newDatabase.map(aliment => {
-                let temp = cloneDeep(aliment);
-                temp.serving = new Qty(aliment.serving);
-                return temp;
-            });
+            // let fullDatabase = newDatabase.map(aliment => {
+            //     let temp = cloneDeep(aliment);
+            //     temp.serving = new Qty(aliment.serving);
+            //     return temp;
+            // });
+            let fullDatabase = newDatabase.map(food => new Food(food));
             state.aliments = fullDatabase;
         },
         clearAlimentDatabase (state) {
@@ -37,8 +38,7 @@ const store = new Vuex.Store({
             let fullDatabase = newDatabase.map(meal => {
                 let expandedMeal = meal;
                 expandedMeal.content = meal.content.map(food => {
-                    food.serving = Qty(food.serving);
-                    return food;
+                    new Food(food);
                 });
                 return expandedMeal;
             });

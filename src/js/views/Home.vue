@@ -87,7 +87,7 @@ export default {
         deleteAliment(index) {
             axios.delete(`/aliments/${index}`)
                 .then(function (response) {
-                    this.$store.setAlimentsDatabase(response.data);
+                    this.$store.commit('setAlimentsDatabase',response.data);
                     // this.setAlimentsDatabase(response.data);
                 })
                 .catch(function (error) {
@@ -107,7 +107,7 @@ export default {
             axios.delete(`/meals/${index}`)
             .then(res => {
                 // this.setMealsDatabase(res.data)
-                this.$store.setMealsDatabase(res.data);
+                this.$store.commit('setMealsDatabase', res.data);
             })
             .catch(err => console.log(err));
         },
