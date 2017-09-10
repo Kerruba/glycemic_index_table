@@ -71,23 +71,35 @@
 	export default {
 		data() {
 			return {
-                form: new Form(default_form),
+                form: new Form(this.aliment),
 				multi_create: false,
-				isUpdate: false,
+				// isUpdate: false,
                 // shared: store.state
 			}
 		},
-		created() {
-			this.$nextTick(() => {
-				if (this.$route.params.id) {
-					let updateAliment = this.$store.getters.getAlimentById(this.$route.params.id);
-					if (updateAliment) {
-						this.isUpdate = true;
-						this.form = new Form(updateAliment[0]);
-					}
+		props: {
+			aliment: {
+				type: Object,
+				default() {
+					return default_form;
 				}
-			});
+			},
+			isUpdate: {
+				type: Boolean,
+				default: false
+			}
 		},
+		// created() {
+		// 	this.$nextTick(() => {
+		// 		if (this.$route.params.id) {
+		// 			let updateAliment = this.$store.getters.getAlimentById(this.$route.params.id);
+		// 			if (updateAliment) {
+		// 				this.isUpdate = true;
+		// 				this.form = new Form(updateAliment[0]);
+		// 			}
+		// 		}
+		// 	});
+		// },
 		methods: {
 			onSubmit() {
 				function updateStore(data) {

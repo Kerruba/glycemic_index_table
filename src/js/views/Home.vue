@@ -16,7 +16,7 @@
                         <td v-text="meal.description"></td>
                         <td v-text="meal.total_load"></td>
                         <td style="text-align:right">
-                            <button class="button is-info fa fa-search" aria-hidden="true" @click="goToMeal(meal._id)"></button>
+                            <button class="button is-info fa fa-search" aria-hidden="true" @click="goToMeal(meal)"></button>
                             <button class="button is-danger" @click="deleteMeal(meal._id)">X</button>
                         </td>
                     </tr>
@@ -43,7 +43,7 @@
                         <td v-text="food.carbs_percentual"></td>
                         <td v-text="food.serving.toString()"></td>
                         <td style="text-align:right">
-                            <button class="button is-info fa fa-search" @click="goToAliment(food._id)"></button>
+                            <button class="button is-info fa fa-search" @click="goToAliment(food)"></button>
                             <button class="button is-danger" @click="deleteAliment(food._id)">X</button>
                         </td>
 
@@ -97,11 +97,11 @@ export default {
         getMealDate(meal) {
             return format(meal.date, 'DD/MM/YY');
         },
-        goToAliment(id) {
-            this.$router.push(`/aliment/${id}`);
+        goToAliment(aliment) {
+            this.$router.push({name: 'aliment', params: { aliment: aliment, isUpdate: true}});
         },
-        goToMeal(id) {
-            this.$router.push(`/meal/${id}`);
+        goToMeal(meal) {
+            this.$router.push({ name: 'meal', params: { meal: meal, isUpdate: true}});
         },
         deleteMeal(id) {
             axios.delete(`/meals/${index}`)

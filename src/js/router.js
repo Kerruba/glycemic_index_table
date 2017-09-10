@@ -7,20 +7,24 @@ let routes = [
     },
     {
         path: '/aliment',
-        component: require('./views/NewFood.vue')
+        component: require('./views/NewFood.vue'),
+        name: 'aliment',
+        props: true
     },
-    {
-        path: '/aliment/:id',
-        component: require('./views/NewFood.vue')
-    },
+    // {
+    //     path: '/aliment/:id',
+    //     component: require('./views/NewFood.vue')
+    // },
     {
         path: '/meal',
-        component: require('./views/NewMeal.vue')
+        component: require('./views/NewMeal.vue'),
+        name: 'meal',
+        props: true
     },
-    {
-        path: '/meal/:id',
-        component: require('./views/NewMeal.vue')
-    }
+    // {
+    //     path: '/meal/:id',
+    //     component: require('./views/NewMeal.vue')
+    // }
 ];
 
 export default new VueRouter({

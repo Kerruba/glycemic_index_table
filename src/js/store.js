@@ -1,5 +1,6 @@
 import Qty from 'js-quantities';
 import { Food } from './components/Food.js';
+import { Meal } from './components/Meal.js';
 import Vuex from 'vuex';
 
 
@@ -35,12 +36,12 @@ const store = new Vuex.Store({
         },
         setMealsDatabase (state, newDatabase) {
             // if (this.debug) console.log('setMealsAction triggered with', newValue);
-            let fullDatabase = newDatabase.map(meal => {
-                let expandedMeal = meal;
-                expandedMeal.content = meal.content.map(food => {
-                    new Food(food);
-                });
-                return expandedMeal;
+            let fullDatabase = newDatabase.map(entry => {
+                let meal = new Meal(entry);
+                // entry.content.forEach(food => meal.addFood(food));
+                // meal._id = entry._id;
+                // meal.description = entry.description;
+                return meal;
             });
             state.meals = fullDatabase;
         },

@@ -120,15 +120,25 @@ export default {
             // shared: store.state,
             selected: {},
             food_serving: "",
-            isUpdate: false,
             filter: {
                 key: ""
-            },
-            meal: {
-                date: new Date(),
-                content: [],
-                description: "" 
-            },
+            }
+        }
+    },
+    props: {
+        meal: {
+            type: Object,
+            default() {
+                return {
+                    date: new Date(),
+                    content: [],
+                    description: "" 
+                }
+            }
+        },
+        isUpdate: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -146,22 +156,22 @@ export default {
         },
         foodList() {
             if (!_.isEmpty(this.filter.key)) {
-                return this.$store.aliments.filter(value => _.startsWith(value.name.toLowerCase(), this.filter.key.toLowerCase()));
+                return this.$store.state.aliments.filter(value => _.startsWith(value.name.toLowerCase(), this.filter.key.toLowerCase()));
             }
-            return this.$store.aliments;
+            return this.$store.state.aliments;
 
         }
     },
     created() {
-        this.$nextTick(() => {
-            if (this.$route.params.id) {
-                let updateMeal = this.$store.getters.getMealById(this.$route.params.id);
-                if (!_.isEmpty(updateMeal)) {
-                    this.isUpdate = true;
-                    this.meal = updateMeal[0];
-                }
-            }
-        });
+        // this.$nextTick(() => {
+        //     if (this.$route.params.id) {
+        //         let updateMeal = this.$store.getters.getMealById(this.$route.params.id);
+        //         if (!_.isEmpty(updateMeal)) {
+        //             this.isUpdate = true;
+        //             this.meal = updateMeal[0];
+        //         }
+        //     }
+        // });
     },
     methods: {
         changeSelected(food) {
