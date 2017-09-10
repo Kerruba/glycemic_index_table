@@ -12,14 +12,6 @@
             </div>
             <a v-for="food in foodList" class="panel-block" v-text="food.name" @click="changeSelected(food)">
             </a>
-            <!-- <div class="field">
-                        <label class="label" for="search">Search</label>
-                        <p class="control">
-                            <input class="input" type="text" id="search" name="search" />
-                        </p>
-                    </div> -->
-    
-            <!-- Food list -->
         </div>
         <div id="food_details">
             <div class="card">
@@ -203,10 +195,7 @@ export default {
                 this.$router.push('/')
             })
             .catch(error =>  console.error(error));
-        },
-        // ...mapMutations([
-        //     'setMealsDatabase'
-        // ])
+        }
     }
 }
 </script>

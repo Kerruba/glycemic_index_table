@@ -14,7 +14,7 @@
                     <tr v-for="meal in meals">
                         <td v-text="getMealDate(meal)"></td>
                         <td v-text="meal.description"></td>
-                        <td v-text="meal.total_load"></td>
+                        <td v-text="meal.totalLoad"></td>
                         <td style="text-align:right">
                             <button class="button is-info fa fa-search" aria-hidden="true" @click="goToMeal(meal)"></button>
                             <button class="button is-danger" @click="deleteMeal(meal._id)">X</button>
@@ -60,11 +60,6 @@ import { format } from 'date-fns';
 // import { mapMutations } from 'vuex';
     
 export default {
-    // data() {
-    //     return {
-    //         shared: store.state
-    //     }
-    // },
     computed: {
         meals() {
             return this.$store.state.meals;
@@ -74,16 +69,6 @@ export default {
         }
     },
     methods: {
-        // getAliments() {
-        //     axios.get('/aliments')
-        //         .then(function (response) {
-        //             store.setAlimentsAction(response.data);
-        //         })
-        //         .catch(function (error) {
-        //             console.log(error);
-        //         });
-
-        // },
         deleteAliment(index) {
             axios.delete(`/aliments/${index}`)
                 .then(function (response) {
@@ -110,11 +95,7 @@ export default {
                 this.$store.commit('setMealsDatabase', res.data);
             })
             .catch(err => console.log(err));
-        },
-        // ...mapMutations([
-        //     'setMealsDatabase',
-        //     'setAlimentsDatabase'
-        // ])
+        }
     }
 }
 </script>

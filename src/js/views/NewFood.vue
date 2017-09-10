@@ -43,8 +43,8 @@
 			<span class="help is-danger" v-if="form.errors.has('serving')" v-text="form.errors.get('serving')"></span>
 		</div>
 		<div class="field">
-            <button class="button is-primary" :disabled="form.errors.any()">Create</button>
-            <span class="control">
+            <button class="button is-primary" :disabled="form.errors.any()" v-text="buttonText"></button>
+            <span class="control" v-if="!isUpdate">
                 <label class="checkbox">
                     <input type="checkbox" v-model="multi_create"> Create another
                 </label>
@@ -89,17 +89,11 @@
 				default: false
 			}
 		},
-		// created() {
-		// 	this.$nextTick(() => {
-		// 		if (this.$route.params.id) {
-		// 			let updateAliment = this.$store.getters.getAlimentById(this.$route.params.id);
-		// 			if (updateAliment) {
-		// 				this.isUpdate = true;
-		// 				this.form = new Form(updateAliment[0]);
-		// 			}
-		// 		}
-		// 	});
-		// },
+		computed: {
+			buttonText() {
+				return this.isUpdate ? "Update": "Create"
+			}
+		},
 		methods: {
 			onSubmit() {
 				function updateStore(data) {
@@ -117,10 +111,7 @@
 					this.form.post('/aliments')
 						.then(data => updateStore.call(this,data));
 				}
-			},
-			// ...mapMutations([
-			// 	'setAlimentsDatabase'
-			// ])
+			}
 		}
 	}
 </script>
